@@ -1,24 +1,26 @@
-import { z } from "zod";  
-import { pgTable, timestamp, text } from "drizzle-orm/pg-core";
+import { z } from "zod";
+import { pgTable, timestamp, text, pgEnum } from "drizzle-orm/pg-core";
+
+export const roleEnums = pgEnum("role", ["user", "admin"]);
 
 export const users = pgTable("user", {
-	id: text("id").primaryKey(),
-        email: text("email").notNull().unique(),
-        hashedPassword: text("hashed_password").notNull(),
-        name: text("name"),
+  id: text("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  hashedPassword: text("hashed_password").notNull(),
+  name: text("name"),
+  role: roleEnums("role").notNull().default("user"),
 });
 
 export const sessions = pgTable("session", {
-	id: text("id").primaryKey(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => users.id),
-	expiresAt: timestamp("expires_at", {
-		withTimezone: true,
-		mode: "date"
-	}).notNull()
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
 });
-
 
 export const authenticationSchema = z.object({
   email: z.string().email().min(5).max(31),
@@ -31,6 +33,7 @@ export const authenticationSchema = z.object({
 export const updateUserSchema = z.object({
   name: z.string().min(3).optional(),
   email: z.string().min(4).optional(),
+  role: z.enum(["user", "admin"]).optional(),
 });
 
 export type UsernameAndPassword = z.infer<typeof authenticationSchema>;

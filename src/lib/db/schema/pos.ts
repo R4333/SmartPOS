@@ -8,13 +8,16 @@ import {
   integer,
   serial,
   uuid,
+  boolean,
+  bigint,
+  bigserial,
 } from "drizzle-orm/pg-core";
 import { createMany } from "drizzle-orm";
 
 import { users } from "./auth";
 
 export const item = pgTable("item", {
-  id: serial("id").primaryKey(),
+  id: bigserial("id", { mode: "number" }).primaryKey(),
   barcode: text("barcode").notNull().unique(),
   name: text("name").notNull(),
   price: numeric("price", { precision: 100, scale: 2 }).notNull(),
@@ -37,10 +40,16 @@ export const item = pgTable("item", {
     .defaultNow(),
 
   discount: numeric("discount", { precision: 100, scale: 2 }).notNull(),
+
+  tags: text("tags").array(),
+
+  qunatity: bigint("quantity", { mode: "number" }).notNull(),
+
+  isAvailable: boolean("is_available").notNull().default(true),
 });
 
 export const sale = pgTable("sale", {
-  id: serial("id").primaryKey(),
+  id: bigserial("id", { mode: "number" }).primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id),
@@ -61,10 +70,10 @@ export const sale = pgTable("sale", {
 });
 
 export const saleItem = pgTable("sale_item", {
-  saleId: integer("sale_id")
+  saleId: bigint("sale_id", { mode: "number" })
     .notNull()
     .references(() => sale.id),
-  itemId: integer("item_id")
+  itemId: bigint("item_id", { mode: "number" })
     .notNull()
     .references(() => item.id),
 });

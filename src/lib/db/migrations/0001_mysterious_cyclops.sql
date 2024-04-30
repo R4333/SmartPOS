@@ -1,5 +1,11 @@
+DO $$ BEGIN
+ CREATE TYPE "role" AS ENUM('user', 'admin');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "item" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"barcode" text NOT NULL,
 	"name" text NOT NULL,
 	"price" numeric(100, 2) NOT NULL,
@@ -9,11 +15,14 @@ CREATE TABLE IF NOT EXISTS "item" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"discount" numeric(100, 2) NOT NULL,
+	"tags" text[],
+	"quantity" bigint NOT NULL,
+	"is_available" boolean DEFAULT true NOT NULL,
 	CONSTRAINT "item_barcode_unique" UNIQUE("barcode")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sale" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" bigserial PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
 	"total" numeric(100, 2) NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -21,10 +30,11 @@ CREATE TABLE IF NOT EXISTS "sale" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sale_item" (
-	"sale_id" integer NOT NULL,
-	"item_id" integer NOT NULL
+	"sale_id" bigint NOT NULL,
+	"item_id" bigint NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "user" ADD COLUMN "role" "role" DEFAULT 'user' NOT NULL;--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "item" ADD CONSTRAINT "item_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION

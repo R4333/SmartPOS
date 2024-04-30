@@ -12,15 +12,8 @@
     {
       "idx": 1,
       "version": "5",
-      "when": 1713989174393,
-      "tag": "0001_colorful_reavers",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1714176790320,
-      "tag": "0002_cuddly_microchip",
+      "when": 1714506069841,
+      "tag": "0001_mysterious_cyclops",
       "breakpoints": true
     }
   ]

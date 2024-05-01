@@ -53,10 +53,13 @@ export async function signInAction(
     const sessionCookie = lucia.createSessionCookie(session.id);
     setAuthCookie(sessionCookie);
 
-    return redirect("/dashboard");
   } catch (e) {
+    console.log(e);
     return genericError;
-  }
+  } 
+
+  return redirect("/dashboard");
+
 }
 
 export async function signUpAction(
@@ -98,7 +101,7 @@ export async function signOutAction(): Promise<ActionResult> {
 
   const sessionCookie = lucia.createBlankSessionCookie();
   setAuthCookie(sessionCookie);
-  redirect("/sign-in");
+  redirect("/");
 }
 
 export async function updateUser(

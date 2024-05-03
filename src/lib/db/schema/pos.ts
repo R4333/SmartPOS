@@ -16,9 +16,8 @@ import { createMany } from "drizzle-orm";
 
 import { users } from "./auth";
 
-export const item = pgTable("item", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
-  barcode: text("barcode").notNull().unique(),
+export const itemTable = pgTable("item", {
+  barcode: text("barcode").primaryKey(),
   name: text("name").notNull(),
   price: numeric("price", { precision: 100, scale: 2 }).notNull(),
   description: text("description"),
@@ -48,8 +47,8 @@ export const item = pgTable("item", {
   isAvailable: boolean("is_available").notNull().default(true),
 });
 
-export const sale = pgTable("sale", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
+export const saleTable = pgTable("sale", {
+  id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id),
@@ -69,13 +68,13 @@ export const sale = pgTable("sale", {
     .defaultNow(),
 });
 
-export const saleItem = pgTable("sale_item", {
-  saleId: bigint("sale_id", { mode: "number" })
+export const saleItemTable = pgTable("sale_item", {
+  saleId: text("sale_id")
     .notNull()
-    .references(() => sale.id),
-  itemId: bigint("item_id", { mode: "number" })
+    .references(() => saleTable.id),
+  itemId: text("item_id")
     .notNull()
-    .references(() => item.id),
+    .references(() => itemTable.barcode),
 });
 
 // create zod schema for item
@@ -86,6 +85,7 @@ export const createItemSchema = z.object({
   price: z.number().positive(),
   description: z.string().optional(),
   image: z.string().optional(),
+  userId: z.string(),
   discount: z.number().positive(),
   tags: z.array(z.string()).optional(),
   quantity: z.number().positive(),
@@ -93,7 +93,6 @@ export const createItemSchema = z.object({
 });
 
 export const updateItemSchema = z.object({
-  barcode: z.string().optional(),
   name: z.string().optional(),
   price: z.number().positive().optional(),
   description: z.string().optional(),
@@ -107,6 +106,7 @@ export const updateItemSchema = z.object({
 // create zod schema for sale
 
 export const createSaleSchema = z.object({
+  id: z.string(),
   userId: z.string(),
   total: z.number().positive(),
 });
@@ -133,7 +133,3 @@ export type Item = z.infer<typeof createItemSchema>;
 export type Sale = z.infer<typeof createSaleSchema>;
 
 export type SaleItem = z.infer<typeof createSaleItemSchema>;
-
-export async function createItem(data: Item) {
-  return createMany(item);
-}

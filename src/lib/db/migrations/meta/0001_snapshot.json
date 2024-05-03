@@ -1,6 +1,6 @@
 {
-  "id": "5c95950b-b408-4bcd-af0d-bd9c4f780612",
-  "prevId": "d959e5fd-3353-4928-987b-0f189d446e59",
+  "id": "05457b7f-a0b7-473f-aed6-a65bff271032",
+  "prevId": "5c22ac2f-19d5-46a1-9474-6b4e40223d22",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -79,7 +79,7 @@
           "type": "role",
           "primaryKey": false,
           "notNull": true,
-          "default": "'user'"
+          "default": "'admin'"
         }
       },
       "indexes": {},
@@ -99,16 +99,10 @@
       "name": "item",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "bigserial",
-          "primaryKey": true,
-          "notNull": true
-        },
         "barcode": {
           "name": "barcode",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "name": {
@@ -198,15 +192,56 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "item_barcode_unique": {
-          "name": "item_barcode_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "barcode"
-          ]
+      "uniqueConstraints": {}
+    },
+    "sale_item": {
+      "name": "sale_item",
+      "schema": "",
+      "columns": {
+        "sale_id": {
+          "name": "sale_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         }
-      }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sale_item_sale_id_sale_id_fk": {
+          "name": "sale_item_sale_id_sale_id_fk",
+          "tableFrom": "sale_item",
+          "tableTo": "sale",
+          "columnsFrom": [
+            "sale_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "sale_item_item_id_item_barcode_fk": {
+          "name": "sale_item_item_id_item_barcode_fk",
+          "tableFrom": "sale_item",
+          "tableTo": "item",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "barcode"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "sale": {
       "name": "sale",
@@ -214,7 +249,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "bigserial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -253,55 +288,6 @@
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sale_item": {
-      "name": "sale_item",
-      "schema": "",
-      "columns": {
-        "sale_id": {
-          "name": "sale_id",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "item_id": {
-          "name": "item_id",
-          "type": "bigint",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "sale_item_sale_id_sale_id_fk": {
-          "name": "sale_item_sale_id_sale_id_fk",
-          "tableFrom": "sale_item",
-          "tableTo": "sale",
-          "columnsFrom": [
-            "sale_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sale_item_item_id_item_id_fk": {
-          "name": "sale_item_item_id_item_id_fk",
-          "tableFrom": "sale_item",
-          "tableTo": "item",
-          "columnsFrom": [
-            "item_id"
           ],
           "columnsTo": [
             "id"

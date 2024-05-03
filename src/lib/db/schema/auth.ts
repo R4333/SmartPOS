@@ -8,7 +8,7 @@ export const users = pgTable("user", {
   email: text("email").notNull().unique(),
   hashedPassword: text("hashed_password").notNull(),
   name: text("name"),
-  role: roleEnums("role").notNull().default("user"),
+  role: roleEnums("role").notNull().default("admin"),
 });
 
 export const sessions = pgTable("session", {

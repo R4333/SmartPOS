@@ -283,7 +283,7 @@ export async function createSale(
 
   // try {
   //   await db.execute(
-  //     sql`INSERT INTO sale (id, user_id, total) VALUES (${salevals.id},${saleVals.userId}, ${saleVals.total})`
+  //     sql`INSERT INTO sale (id, user_id, total) VALUES (${salevals.id}, ${saleVals.userId}, ${saleVals.total})`
   //   );
   //   return { success: true, error: "" };
   // } catch (e) {

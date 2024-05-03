@@ -1,5 +1,6 @@
 import { getUserAuth } from "@/lib/auth/utils";
 import { redirect } from "next/navigation";
+export const dynamic = 'force-static'
 
 export default async function AuthLayout({
   children,

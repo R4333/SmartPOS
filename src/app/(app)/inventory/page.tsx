@@ -1,8 +1,3 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/ij6UOrr3lu4
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import {
   CardTitle,
   CardDescription,
@@ -21,6 +16,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Image from 'next/image';
+
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -60,7 +57,7 @@ export default function Component() {
           <TableBody>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -97,7 +94,7 @@ export default function Component() {
             </TableRow>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -134,7 +131,7 @@ export default function Component() {
             </TableRow>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -169,7 +166,7 @@ export default function Component() {
             </TableRow>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -206,7 +203,7 @@ export default function Component() {
             </TableRow>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -243,7 +240,7 @@ export default function Component() {
             </TableRow>
             <TableRow>
               <TableCell className="hidden sm:table-cell">
-                <img
+                <Image
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
@@ -290,7 +287,7 @@ export default function Component() {
   );
 }
 
-function MoveHorizontalIcon(props) {
+function MoveHorizontalIcon(props:any) {
   return (
     <svg
       {...props}

@@ -209,18 +209,23 @@ export async function createItem(
   };
 
   try {
-    await db.insert(itemTable).values({
+
+    type NewUser = typeof itemTable.$inferInsert;
+
+    const newUser: NewUser ={
       barcode: itemvals.barcode,
       name: itemvals.name,
-      price: itemvals.price,
+      price: String(itemvals.price),
       description: itemvals.description,
       image: itemvals.image,
       userId: itemvals.userId,
-      discount: itemvals.discount,
+      discount: String(itemvals.discount),
       tags: itemvals.tags,
       quantity: itemvals.quantity,
       isAvailable: itemvals.isAvailable,
-    });
+    }
+
+    await db.insert(itemTable).values(newUser);
     return { success: true, error: "" };
   } catch (e) {
     return genericError;
@@ -271,11 +276,14 @@ export async function createSale(
   };
 
   try {
-    await db.insert(saleTable).values({
+
+    type NewUser = typeof saleTable.$inferInsert;
+    const newUser:NewUser =  {
       id: saleVals.id,
       userId: saleVals.userId,
-      total: saleVals.total,
-    });
+      total: String(saleVals.total),
+    }
+    await db.insert(saleTable).values(newUser);
     return { success: true, error: "" };
   } catch (e) {
     return genericError;

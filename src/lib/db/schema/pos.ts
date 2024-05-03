@@ -43,7 +43,7 @@ export const item = pgTable("item", {
 
   tags: text("tags").array(),
 
-  qunatity: bigint("quantity", { mode: "number" }).notNull(),
+  quantity: bigint("quantity", { mode: "number" }).notNull(),
 
   isAvailable: boolean("is_available").notNull().default(true),
 });
@@ -78,4 +78,62 @@ export const saleItem = pgTable("sale_item", {
     .references(() => item.id),
 });
 
-//create a many to many table for sales and items
+// create zod schema for item
+
+export const createItemSchema = z.object({
+  barcode: z.string(),
+  name: z.string(),
+  price: z.number().positive(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  discount: z.number().positive(),
+  tags: z.array(z.string()).optional(),
+  quantity: z.number().positive(),
+  isAvailable: z.boolean().optional(),
+});
+
+export const updateItemSchema = z.object({
+  barcode: z.string().optional(),
+  name: z.string().optional(),
+  price: z.number().positive().optional(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  discount: z.number().positive().optional(),
+  tags: z.array(z.string()).optional(),
+  quantity: z.number().positive().optional(),
+  isAvailable: z.boolean().optional(),
+});
+
+// create zod schema for sale
+
+export const createSaleSchema = z.object({
+  userId: z.string(),
+  total: z.number().positive(),
+});
+
+export const updateSaleSchema = z.object({
+  userId: z.string().optional(),
+  total: z.number().positive().optional(),
+});
+
+// create zod schema for saleItem
+
+export const createSaleItemSchema = z.object({
+  saleId: z.string(),
+  itemId: z.string(),
+});
+
+export const updateSaleItemSchema = z.object({
+  saleId: z.string().optional(),
+  itemId: z.string().optional(),
+});
+
+export type Item = z.infer<typeof createItemSchema>;
+
+export type Sale = z.infer<typeof createSaleSchema>;
+
+export type SaleItem = z.infer<typeof createSaleItemSchema>;
+
+export async function createItem(data: Item) {
+  return createMany(item);
+}

@@ -1,13 +1,15 @@
 import SignOutBtn from "@/components/auth/SignOutBtn";
 import { getUserAuth } from "@/lib/auth/utils";
+import SearchBar from "./components/Search";
+import CategoryTab from "./components/CategoryTab";
 
 export default async function Home() {
-  const { session } = await getUserAuth();
+ //const { session } = await getUserAuth();
   return (
     <main className="">
-      <h1 className="text-2xl font-bold my-2">Profile</h1>
-      <pre className="bg-secondary p-4 rounded-lg my-2">
-        {JSON.stringify(session, null, 2)}
+      <pre className="flex flex-col items-center justify-between pt-4 h-72 pb-28">
+      <SearchBar />
+      <CategoryTab />
       </pre>
       <SignOutBtn />
     </main>

@@ -11,9 +11,9 @@ export default async function AppLayout({
   await checkAuth();
   return (
     <main>
-      <div className="flex h-screen pl-16">
+      <div className="flex h-screen pl-14">
         <NewSideBarItems/>
-        <main className="flex-1 md:p-8 pt-2 p-8 overflow-y-auto">
+        <main className="flex-1 m-0 overflow-y-auto overflow-x-hidden">
           {children}
         </main>
       </div>

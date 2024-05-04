@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import SidebarItems from "./SidebarItems";
+import NewSideBarItems from "./NewSideBarItems";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 import { AuthSession, getUserAuth } from "@/lib/auth/utils";
@@ -14,7 +15,7 @@ const Sidebar = async () => {
       <div className="flex flex-col justify-between h-full">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold ml-4">SmartPOS</h3>
-          <SidebarItems />
+          <NewSideBarItems/>
         </div>
         <UserDetails session={session} />
       </div>

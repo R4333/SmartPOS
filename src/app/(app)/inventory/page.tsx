@@ -26,6 +26,8 @@ import {
   DropdownMenu,
 } from "@/components/ui/dropdown-menu";
 
+import pic from '../../bg.png'
+
 export default function Component() {
   return (
     <Card>
@@ -61,7 +63,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>
@@ -98,7 +100,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>
@@ -135,7 +137,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>
@@ -170,7 +172,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>
@@ -207,7 +209,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>
@@ -244,7 +246,7 @@ export default function Component() {
                   alt="Product image"
                   className="aspect-square rounded-md object-cover"
                   height="64"
-                  src="/placeholder.svg"
+                  src={pic}
                   width="64"
                 />
               </TableCell>

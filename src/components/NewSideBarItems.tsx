@@ -6,12 +6,9 @@ import { usePathname } from 'next/navigation'
 import {
   Package,
   Package2,
-  Search,
   Settings,
   ShoppingCart,
-  Users2,
   Home,
-  LineChart,
 } from "lucide-react"
 
 export default function NewSideBarItems(){
@@ -20,6 +17,7 @@ const currentPath = usePathname();
 const [path, setPath] = useState(`${currentPath.split("/")[1]}`);
 return(
 <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <TooltipProvider>
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Link
             href="#"
@@ -28,7 +26,6 @@ return(
             <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
             <span className="sr-only">Acme Inc</span>
           </Link>
-          <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -41,8 +38,6 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Dashboard</TooltipContent>
           </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -55,8 +50,6 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Inventory</TooltipContent>
           </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -69,10 +62,8 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Account</TooltipContent>
           </Tooltip>
-          </TooltipProvider>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -85,8 +76,8 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Settings</TooltipContent>
           </Tooltip>
-          </TooltipProvider>
         </nav>
+        </TooltipProvider>
       </aside>
 
     )

@@ -7,7 +7,7 @@ export default async function Home() {
  //const { session } = await getUserAuth();
   return (
     <main className="">
-      <pre className="flex flex-col items-center justify-between pt-4 h-[1000px]">
+      <pre className="flex flex-col justify-between pt-4 h-[1000px]">
       <SearchBar />
       <CategoryTab />
       </pre>

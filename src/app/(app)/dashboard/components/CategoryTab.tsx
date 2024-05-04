@@ -2,13 +2,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ItemCard from "./ItemCard"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+function Items(props:any){
+        return (
+            <ScrollArea className="h-[45rem] w-9/12 rounded-md border mt-9 mb-3">
+                    {props.tags.map((tag:any, index:any) => (
+                        <>
+                            <div key={index} className="text-sm flex flex-row justify-center mb-3 mt-3">
+                                {tag.map((t,i) => t)}
+                            </div>
+                        </>
+                    ))}
+            </ScrollArea>
+
+        )
+    }
 
 export default function CategoryTab(){
-    const tags = Array.from({ length: 5 }).map(
-  (_, i, a) => <ItemCard key={i} name="Lemonade"/>
+
+    const tags = Array.from({ length: 10 }).map(
+  (_, i, a) =>{
+        const tags2 = Array.from({ length: 5 }).map(
+        (_, i, a) => <ItemCard key={i} name={`Lemonade ${i}`}/>)
+
+          return tags2;
+      }
 )
-    return (
-    <Tabs defaultValue="snacks" className="w-11/12">
+        return (
+    <Tabs defaultValue="snacks" className="w-11/12 mb-16 ml-3">
         <TabsList className="bg-zinc-950 border-[0.2px] divide-x">
             <TabsTrigger value="snacks" className="w-36 text-md">Snacks</TabsTrigger>
             <TabsTrigger value="beverages" className=" w-36 text-md">Beverages</TabsTrigger>
@@ -24,89 +44,17 @@ export default function CategoryTab(){
             <TabsTrigger value="ointments" className=" w-36 text-md">Ointments</TabsTrigger>
         </TabsList>
         <TabsContent value="snacks">
-            <ScrollArea className="h-[50rem] w-9/12 rounded-md border mt-9 mb-3">
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-            </ScrollArea>
+            <Items tags={tags}/>
         </TabsContent>
         <TabsContent value="beverages">
-            <ScrollArea className="h-[50rem] w-9/12 rounded-md border mt-9 mb-3">
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-                <div className="p-4 flex flex-row">
-                    {tags.map((tag, index) => (
-                        <>
-                            <div key={index} className="text-sm">
-                                {tag}
-                            </div>
-                        </>
-                    ))}
-                </div>
-            </ScrollArea>
- 
+            <Items tags={tags}/>
         </TabsContent>
-        <TabsContent value="dairy">Dairy</TabsContent>
-        <TabsContent value="bakery">Make changes to your account here.</TabsContent>
-
+        <TabsContent value="dairy">
+            <Items tags={tags}/>
+        </TabsContent>
+        <TabsContent value="bakery">
+            <Items tags={tags}/>
+        </TabsContent>
     </Tabs>
 
     )

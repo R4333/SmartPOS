@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -24,8 +25,8 @@ export default function AddItem() {
     formData.append('image', 'laptop_image_url');
     formData.append('userId', 'user_id_of_seller');
     formData.append('discount', '0.1');
-    formData.append('tags', 'electronics, laptop, tech');
-    formData.append('quantity', '50');
+    formData.append('tags', 'electronics laptop tech');
+    formData.append('quantity', '50')
     formData.append('isAvailable', 'true');
 
 
@@ -56,7 +57,7 @@ export default function AddItem() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" >Save changes</Button>
+          <Button type="submit" onClick={ async ()=> await createItem(1,formData).then((t)=>console.log(t))}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

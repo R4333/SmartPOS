@@ -159,12 +159,13 @@ export async function createItem(
 
   const name = formData.get("name") ?? undefined;
   const barcode = formData.get("barcode") ?? undefined;
-  const price = formData.get("price") ?? undefined;
+  const price = parseInt(formData.get("price")) ?? undefined;
   const description = formData.get("description") ?? undefined;
   const image = formData.get("image") ?? undefined;
-  const tags = formData.get("tags") ?? undefined;
-  const quantity = formData.get("quantity") ?? undefined;
-  const discount = formData.get("discount") ?? undefined;
+  const tags = formData.get("tags").split(" ") ?? undefined;
+  const quantity = parseInt(formData.get("quantity")) ?? undefined;
+  const discount = parseFloat(formData.get("discount")) ?? undefined;
+  const userId = "saada jee";
 
   const result = createItemSchema.safeParse({
     barcode,
@@ -172,6 +173,7 @@ export async function createItem(
     price,
     description,
     image,
+    userId,
     discount,
     tags,
     quantity,
@@ -180,6 +182,7 @@ export async function createItem(
 
   if (!result.success) {
     const error = result.error.flatten().fieldErrors;
+    console.log(error)
     if (error.name) return { error: "Invalid name - " + error.name[0] };
     if (error.price) return { error: "Invalid price - " + error.price[0] };
     if (error.description)
@@ -190,6 +193,7 @@ export async function createItem(
       return { error: "Invalid quantity - " + error.quantity[0] };
     if (error.discount)
       return { error: "Invalid discount - " + error.discount[0] };
+    
     return genericError;
   }
 
@@ -208,6 +212,7 @@ export async function createItem(
     isAvailable: result.data.isAvailable,
   };
 
+    console.log("In 22here her")
   try {
 
     type NewUser = typeof itemTable.$inferInsert;
@@ -215,7 +220,7 @@ export async function createItem(
     const newUser: NewUser ={
       barcode: itemvals.barcode,
       name: itemvals.name,
-      price: String(itemvals.price),
+      price: itemvals.price,
       description: itemvals.description,
       image: itemvals.image,
       userId: itemvals.userId,
@@ -225,26 +230,14 @@ export async function createItem(
       isAvailable: itemvals.isAvailable,
     }
 
+    console.log("trying for new User")
     await db.insert(itemTable).values(newUser);
-    return { success: true, error: "" };
+    return { success: true, error: "Kutta" };
   } catch (e) {
+    console.log("final error")
     return genericError;
   }
 
-  // try {
-  //   await db.execute(
-  //     sql` INSERT INTO item (barcode, name, price, description, image, user_id, discount, tags, quantity, is_available) VALUES (${
-  //       itemvals.barcode
-  //     }, ${itemvals.name}, ${itemvals.price}, ${itemvals.description}, ${
-  //       itemvals.image
-  //     }, ${itemvals.userId}, ${itemvals.discount}, ${itemvals.tags}, ${
-  //       itemvals.quantity
-  //     }, ${itemvals.isAvailable === true})`
-  //   );
-  //   return { success: true, error: "" };
-  // } catch (e) {
-  //   return genericError;
-  // }
 }
 
 //create sale

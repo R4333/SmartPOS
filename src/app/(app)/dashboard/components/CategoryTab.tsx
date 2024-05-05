@@ -8,7 +8,7 @@ function Items(props:any){
                     {props.tags.map((tag:any, index:any) => (
                         <>
                             <div key={index} className="text-sm flex flex-row justify-center mb-3 mt-3">
-                                {tag.map((t,i) => t)}
+                                {tag.map((t:any,i:any) => t)}
                             </div>
                         </>
                     ))}
@@ -20,7 +20,7 @@ function Items(props:any){
 export default function CategoryTab(){
 
     const tags = Array.from({ length: 10 }).map(
-  (_, i, a) =>{
+  (_, i:any, a:any) =>{
         const tags2 = Array.from({ length: 5 }).map(
         (_, i, a) => <ItemCard key={i} name={`Lemonade ${i}`}/>)
 

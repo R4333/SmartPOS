@@ -29,6 +29,8 @@ import {
 import pic from '../../bg.png'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import AddItem from "./components/AddItem";
+import {createItem} from "@/lib/actions/pos"
+import {itemTable} from "@/lib/db/schema/pos"
 
 
 export default function Component() {

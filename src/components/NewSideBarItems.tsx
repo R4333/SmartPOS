@@ -30,7 +30,7 @@ return(
             <TooltipTrigger asChild>
               <Link
                 href="/dashboard"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "dashboard" ? "bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "dashboard" ? " border border-tab-active bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
               onClick={()=>setPath("dashboard")}>
                 <Home className="h-5 w-5" />
                 <span className="sr-only">Dashboard</span>

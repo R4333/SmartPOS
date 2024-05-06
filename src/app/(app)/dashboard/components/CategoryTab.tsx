@@ -29,7 +29,7 @@ export default function CategoryTab(){
 )
         return (
     <Tabs defaultValue="snacks" className="w-11/12 mb-16 ml-3">
-        <TabsList className="bg-zinc-950 border-[0.2px] divide-x">
+        <TabsList className="bg-muted border-[0.2px]">
             <TabsTrigger value="snacks" className="w-36 text-md">Snacks</TabsTrigger>
             <TabsTrigger value="beverages" className=" w-36 text-md">Beverages</TabsTrigger>
             <TabsTrigger value="dairy" className=" w-36 text-md">Dairy</TabsTrigger>

@@ -44,11 +44,11 @@ export default function Component() {
   const { toast } = useToast()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Products</CardTitle>
+    <Card className="w-[97.5%] ml-5">
+      <CardHeader className="pt-5">
+        <CardTitle className="mb-4">Inventory</CardTitle>
         <CardDescription className="flex justify-between">
-          Manage your products and view their sales performance.
+         Manage your items and their details 
           <div className="mr-9">
           <AddItem />
           </div>
@@ -99,7 +99,7 @@ export default function Component() {
                 <Dialog>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                    <Button aria-haspopup="true" size="icon" variant="ghost" className="bg-background border-2 border-secondary text-secondary-foreground">
                       <MoveHorizontalIcon className="h-4 w-4" />
                       <span className="sr-only">Toggle menu</span>
                     </Button>
@@ -110,7 +110,7 @@ export default function Component() {
                         <DialogTrigger>Edit</DialogTrigger>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                    <Button  onClick={() => toast({description: "Item successfully removed"})}>
+                    <Button  onClick={() => console.log(toast({description: "Item successfully removed"}))}>
                         Delete 
                     </Button>
                     </DropdownMenuItem>

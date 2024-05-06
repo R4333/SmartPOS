@@ -33,7 +33,7 @@ export default function AddItem() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline"><Plus /></Button>
+        <Button variant="outline" className="bg-primary text-secondary"><Plus /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

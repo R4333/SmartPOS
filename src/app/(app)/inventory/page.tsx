@@ -26,6 +26,16 @@ import {
   DropdownMenu,
 } from "@/components/ui/dropdown-menu";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+
 import pic from '../../bg.png'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import AddItem from "./components/AddItem";
@@ -87,6 +97,7 @@ export default function Component() {
                 2023-07-12 10:42 AM
               </TableCell>
               <TableCell>
+                <Dialog>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button aria-haspopup="true" size="icon" variant="ghost">
@@ -96,10 +107,22 @@ export default function Component() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <DialogTrigger>Edit</DialogTrigger>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                          <DialogDescription>
+                            This action cannot be undone. This will permanently delete your account
+                            and remove your data from our servers.
+                          </DialogDescription>
+                    </DialogHeader>
+                </DialogContent>
+                </Dialog>
               </TableCell>
             </TableRow> 
           </TableBody>

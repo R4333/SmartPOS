@@ -1,3 +1,4 @@
+"use client"
 import {
   CardTitle,
   CardDescription,
@@ -34,16 +35,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-
+import { useToast } from "@/components/ui/use-toast"
 import pic from '../../bg.png'
-import { ScrollArea } from "@/components/ui/scroll-area"
 import AddItem from "./components/AddItem";
-import {createItem} from "@/lib/actions/pos"
-import {itemTable} from "@/lib/db/schema/pos"
 
 
 export default function Component() {
+  const { toast } = useToast()
+
   return (
     <Card>
       <CardHeader>
@@ -110,7 +109,11 @@ export default function Component() {
                     <DropdownMenuItem>
                         <DialogTrigger>Edit</DialogTrigger>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuItem>
+                    <Button  onClick={() => toast({description: "Item successfully removed"})}>
+                        Delete 
+                    </Button>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <DialogContent>

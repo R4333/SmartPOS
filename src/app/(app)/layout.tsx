@@ -1,7 +1,5 @@
 import { checkAuth } from "@/lib/auth/utils";
 import { Toaster } from "@/components/ui/sonner";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
 import NewSideBarItems from "@/components/NewSideBarItems";
 export default async function AppLayout({
   children,
@@ -13,11 +11,9 @@ export default async function AppLayout({
     <main>
       <div className="flex h-screen pl-16 pt-2">
         <NewSideBarItems/>
-        <main className="flex-1 m-0 overflow-y-auto overflow-x-hidden">
-          {children}
-        </main>
+        <main className="flex-1 m-0 overflow-y-auto overflow-x-hidden">{children}</main>
+        <Toaster richColors />
       </div>
-      <Toaster richColors />
     </main>
   );
 }

@@ -16,7 +16,7 @@ export default function NewSideBarItems(){
 const currentPath = usePathname();
 const [path, setPath] = useState(`${currentPath.split("/")[1]}`);
 return(
-<aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+<aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r border-border bg-background sm:flex">
         <TooltipProvider>
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Link

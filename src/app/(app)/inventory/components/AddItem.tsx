@@ -22,13 +22,34 @@ import { Label } from "@/components/ui/label"
 import { Plus } from 'lucide-react';
 import {createItem} from "@/lib/actions/pos"
 import { useFormState } from "react-dom";
+import { useState } from "react";
 
 export default function AddItem() {
 
     const [state, formAction] = useFormState(createItem, {
         error: "",                                                                                                                                                                     
     });  
+    const [csvData, setCsvData] = useState([]);
 
+    const handleFileUpload = (event:any) => {
+        const file = event.target.files[0]; // Get the first file from the FileList
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const content = e.target ? e.target.result : "";
+          const data = parseCsv(content);
+          setCsvData(data);
+        };
+
+        reader.readAsText(file); // Read file as text
+  };
+
+    const parseCsv = (csvText:any) => {
+        const lines = csvText.split('\n'); // Split text into lines
+        const data = lines.map((line:any) => line.split(',')); // Split lines into arrays of values
+        console.log(data);
+        return data;
+  };
     const formData = new FormData();
 
     formData.append('barcode', 'ELEC001');
@@ -54,7 +75,7 @@ export default function AddItem() {
         <div className="grid w-full max-w-sm items-center gap-1.5 mb-9 mt-3">
             <h1 className="font-bold">Add via CSV</h1>
             <span className="text-sm text-muted-foreground mb-3">Make sure to have the same schema</span>
-            <Input id="picture" type="file" />
+            <Input accept=".csv" type="file" onChange={handleFileUpload}/>
         </div>
         <h1 className="font-bold">Add Manually</h1>
         <span className="text-sm text-muted-foreground">Manually enter the entries</span>

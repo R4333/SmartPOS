@@ -5,6 +5,7 @@ import pic from '@/images/orange1.png'
 
 interface props{
   name: string;
+  category: string;
 }
 const ItemCard: React.FC<props> = (props) =>  {
   return <Button variant="outline" className="h-[200px] w-[15%] ml-4 mb-3 justify-between flex flex-col">

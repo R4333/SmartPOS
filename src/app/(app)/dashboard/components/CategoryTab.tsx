@@ -12,8 +12,9 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
 
     const [query, setQuery] = useState('');
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
+    const categ = ["all", "snacks", "beverages"]
     const tags = Array.from({ length: 33 }).map(
-        (_, i:any, a:any) =>{return <ItemCard key={i} name={`Lemonade ${i}`}/>}
+        (_, i:any, a:any) =>{return <ItemCard key={i} name={`Lemonade ${i}`} category={i < 10 ? "snacks" : "beverages"}/>}
     )
         useEffect(()=> {
             setQuery(value ? value: "");
@@ -30,7 +31,7 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
 
             if(query != '')
             {
-                const newTags = (tags.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase())))
+                const newTags = tags.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase()))
                 setData(newTags);
             }
             else setData(tags)
@@ -39,8 +40,9 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             
 
         return (
-    <Tabs defaultValue="snacks" className="w-11/12 mb-16 ml-3">
-        <TabsList className="bg-muted border-[0.2px]">
+    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3">
+        <TabsList className="bg-muted border-[0.2px] w-full">
+            <TabsTrigger value="all" className="w-36 text-md">All</TabsTrigger>
             <TabsTrigger value="snacks" className="w-36 text-md">Snacks</TabsTrigger>
             <TabsTrigger value="beverages" className=" w-36 text-md">Beverages</TabsTrigger>
             <TabsTrigger value="dairy" className=" w-36 text-md">Dairy</TabsTrigger>
@@ -52,15 +54,27 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             <TabsTrigger value="pcare" className=" w-36 text-md">Care</TabsTrigger>
             <TabsTrigger value="clothes" className=" w-36 text-md">Clothes</TabsTrigger>
             <TabsTrigger value="herbs" className=" w-36 text-md">Herbs</TabsTrigger>
-            <TabsTrigger value="ointments" className=" w-36 text-md">Ointments</TabsTrigger>
         </TabsList>
-        <TabsContent value="snacks">
-            <ScrollArea className="h-[47rem] max-w-[73%] w-auto rounded-md border mt-9 mb-3 pt-3">
-            <div className="flex flex-row flex-wrap items-center">
-                    {filteredData.map((tag:any, index:any) => {return (tag)})}
-            </div>
-            </ScrollArea>
-        </TabsContent>
+        <ScrollArea className="h-[47rem] max-w-[73%] w-auto rounded-md border mt-9 mb-3 pt-3">
+            <>
+            {
+                categ.map( 
+                    (category, i:any, a:any) => {
+                        return(
+                            <TabsContent key={i} value={category}>
+                            <div className="flex flex-row flex-wrap items-center">
+                                {filteredData.map((tag:any, index:any) => {
+                                    if(category === "all") return (tag)
+                                    return tag.props.category == category ? (tag) : null
+                                    })}
+                            </div>
+                            </TabsContent>
+                        )
+                    }
+                )
+            }
+            </>
+       </ScrollArea>
    </Tabs>
 
     )

@@ -1,32 +1,43 @@
+"use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ItemCard from "./ItemCard"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useEffect, useState } from "react"
 
-function Items(props:any){
-        return (
-            <ScrollArea className="h-[45rem] w-9/12 rounded-md border mt-9 mb-3">
-                    {props.tags.map((tag:any, index:any) => (
-                        <>
-                            <div key={index} className="text-sm flex flex-row justify-center mb-3 mt-3">
-                                {tag.map((t:any,i:any) => t)}
-                            </div>
-                        </>
-                    ))}
-            </ScrollArea>
+interface SearchProps {
+  value?: string;
+}
 
-        )
-    }
+const CategoryTab: React.FC<SearchProps> = ({value}) => {
 
-export default function CategoryTab(){
+    const [query, setQuery] = useState('');
+    const [filteredData, setData] = useState<React.JSX.Element[]>([]);
+    const tags = Array.from({ length: 33 }).map(
+        (_, i:any, a:any) =>{return <ItemCard key={i} name={`Lemonade ${i}`}/>}
+    )
+        useEffect(()=> {
+            setQuery(value ? value: "");
+            setData(tags);
 
-    const tags = Array.from({ length: 10 }).map(
-  (_, i:any, a:any) =>{
-        const tags2 = Array.from({ length: 5 }).map(
-        (_, i, a) => <ItemCard key={i} name={`Lemonade ${i}`}/>)
+        }, [])
 
-          return tags2;
-      }
-)
+        useEffect(()=> {
+            setQuery(value ? value: "");
+        
+        }, [value])
+
+        useEffect(()=> {
+
+            if(query != '')
+            {
+                const newTags = (tags.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase())))
+                setData(newTags);
+            }
+            else setData(tags)
+        }, [query])
+ 
+            
+
         return (
     <Tabs defaultValue="snacks" className="w-11/12 mb-16 ml-3">
         <TabsList className="bg-muted border-[0.2px]">
@@ -44,18 +55,15 @@ export default function CategoryTab(){
             <TabsTrigger value="ointments" className=" w-36 text-md">Ointments</TabsTrigger>
         </TabsList>
         <TabsContent value="snacks">
-            <Items tags={tags}/>
+            <ScrollArea className="h-[47rem] max-w-[73%] w-auto rounded-md border mt-9 mb-3 pt-3">
+            <div className="flex flex-row flex-wrap items-center">
+                    {filteredData.map((tag:any, index:any) => {return (tag)})}
+            </div>
+            </ScrollArea>
         </TabsContent>
-        <TabsContent value="beverages">
-            <Items tags={tags}/>
-        </TabsContent>
-        <TabsContent value="dairy">
-            <Items tags={tags}/>
-        </TabsContent>
-        <TabsContent value="bakery">
-            <Items tags={tags}/>
-        </TabsContent>
-    </Tabs>
+   </Tabs>
 
     )
 }
+
+export default CategoryTab;

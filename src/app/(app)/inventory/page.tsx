@@ -99,7 +99,7 @@ export default function Component() {
                 <Dialog>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost" className="bg-background border-2 border-secondary text-secondary-foreground">
+                    <Button aria-haspopup="true" size="icon" variant="ghost" className="bg-secondary border-2 border-secondary text-primary">
                       <MoveHorizontalIcon className="h-4 w-4" />
                       <span className="sr-only">Toggle menu</span>
                     </Button>

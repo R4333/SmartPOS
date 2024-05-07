@@ -30,7 +30,7 @@ return(
             <TooltipTrigger asChild>
               <Link
                 href="/dashboard"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "dashboard" ? " border border-tab-active bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "dashboard" ? " bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
               onClick={()=>setPath("dashboard")}>
                 <Home className="h-5 w-5" />
                 <span className="sr-only">Dashboard</span>
@@ -42,7 +42,7 @@ return(
             <TooltipTrigger asChild>
               <Link
                 href="/inventory"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "inventory" ? "bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "inventory" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
               onClick={()=>setPath("inventory")}>
                 <ShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Inventory</span>
@@ -54,7 +54,7 @@ return(
             <TooltipTrigger asChild>
               <Link
                 href="/account"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg  ${path === "account" ? "bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg  ${path === "account" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
               onClick={()=>setPath("account")}>
                 <Package className="h-5 w-5" />
                 <span className="sr-only">Account</span>
@@ -68,7 +68,7 @@ return(
             <TooltipTrigger asChild>
               <Link
                 href="/settings"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "settings" ? "bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "settings" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
               onClick={()=>setPath("settings")}>
                 <Settings className="h-5 w-5" />
                 <span className="sr-only">Settings</span>

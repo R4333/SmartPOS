@@ -4,7 +4,7 @@ import ItemCard from "./ItemCard"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
-import { Hash } from 'lucide-react';
+import { Barcode} from 'lucide-react';
 
 
 interface SearchProps {
@@ -43,23 +43,23 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             
 
         return (
-    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3 mt-9">
-        <TabsList className="bg-muted border-[0.2px] w-full">
-            <TabsTrigger value="all" className="w-36 text-md">All</TabsTrigger>
-            <TabsTrigger value="snacks" className="w-36 text-md">Snacks</TabsTrigger>
-            <TabsTrigger value="beverages" className=" w-36 text-md">Beverages</TabsTrigger>
-            <TabsTrigger value="dairy" className=" w-36 text-md">Dairy</TabsTrigger>
-            <TabsTrigger value="bakery" className=" w-36 text-md">Bakery</TabsTrigger>
-            <TabsTrigger value="electronics" className=" w-36 text-md">Electronics</TabsTrigger>
-            <TabsTrigger value="kitchen" className=" w-36 text-md">Kitchen</TabsTrigger>
-            <TabsTrigger value="furniture" className=" w-36 text-md">Furniture</TabsTrigger>
-            <TabsTrigger value="Meat" className=" w-36 text-md">Meat</TabsTrigger>
-            <TabsTrigger value="pcare" className=" w-36 text-md">Care</TabsTrigger>
-            <TabsTrigger value="clothes" className=" w-36 text-md">Clothes</TabsTrigger>
-            <TabsTrigger value="herbs" className=" w-36 text-md">Herbs</TabsTrigger>
+    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3 mt-9 focus:bg-background focus-visible:bg-background">
+        <TabsList className="bg-muted border-[0.2px] w-full bg-secondary ">
+            <TabsTrigger value="all" className="w-36 text-md focus:bg-background focus-visible:bg-background">All</TabsTrigger>
+            <TabsTrigger value="snacks" className="w-36 text-md focus:bg-background focus-visible:bg-background">Snacks</TabsTrigger>
+            <TabsTrigger value="beverages" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Beverages</TabsTrigger>
+            <TabsTrigger value="dairy" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Dairy</TabsTrigger>
+            <TabsTrigger value="bakery" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Bakery</TabsTrigger>
+            <TabsTrigger value="electronics" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Electronics</TabsTrigger>
+            <TabsTrigger value="kitchen" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Kitchen</TabsTrigger>
+            <TabsTrigger value="furniture" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Furniture</TabsTrigger>
+            <TabsTrigger value="Meat" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Meat</TabsTrigger>
+            <TabsTrigger value="pcare" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Care</TabsTrigger>
+            <TabsTrigger value="clothes" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Clothes</TabsTrigger>
+            <TabsTrigger value="herbs" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Herbs</TabsTrigger>
         </TabsList>
         <div className="relative w-[10%] mt-8 ml-2"> 
-            <Hash className="absolute right-1 bottom-2.5 w-6 h-5"/>
+            <Barcode className="absolute right-1.5 bottom-2.5 w-6 h-5 text-muted-foreground"/>
             <Input type="email" placeholder="Barcode" className="w-full bg-secondary"/>
         </div>
         <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3 bg-secondary">

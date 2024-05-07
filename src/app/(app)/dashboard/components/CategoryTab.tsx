@@ -3,6 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ItemCard from "./ItemCard"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useEffect, useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Hash } from 'lucide-react';
+
 
 interface SearchProps {
   value?: string;
@@ -55,7 +58,11 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             <TabsTrigger value="clothes" className=" w-36 text-md">Clothes</TabsTrigger>
             <TabsTrigger value="herbs" className=" w-36 text-md">Herbs</TabsTrigger>
         </TabsList>
-        <ScrollArea className="h-[47rem] max-w-[73%] w-auto rounded-md border mt-9 mb-3 pt-3">
+        <div className="relative w-[10%] mt-8"> 
+            <Hash className="absolute right-1 bottom-2.5 w-6 h-5"/>
+            <Input type="email" placeholder="Barcode" className="w-full"/>
+        </div>
+        <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3">
             <>
             {
                 categ.map( 

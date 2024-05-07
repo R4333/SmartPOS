@@ -25,7 +25,7 @@ return (
             <Input
               type="search"
               placeholder="Search for item..."
-              className="w-full rounded-lg bg-background pl-8"
+              className="w-full rounded-lg bg-secondary pl-8"
               onFocus={()=>setFocus(true)}
               onBlur={()=>setFocus(false)}
               onChange={handleInputChange}

@@ -43,7 +43,7 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             
 
         return (
-    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3">
+    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3 mt-9">
         <TabsList className="bg-muted border-[0.2px] w-full">
             <TabsTrigger value="all" className="w-36 text-md">All</TabsTrigger>
             <TabsTrigger value="snacks" className="w-36 text-md">Snacks</TabsTrigger>
@@ -58,11 +58,11 @@ const CategoryTab: React.FC<SearchProps> = ({value}) => {
             <TabsTrigger value="clothes" className=" w-36 text-md">Clothes</TabsTrigger>
             <TabsTrigger value="herbs" className=" w-36 text-md">Herbs</TabsTrigger>
         </TabsList>
-        <div className="relative w-[10%] mt-8"> 
+        <div className="relative w-[10%] mt-8 ml-2"> 
             <Hash className="absolute right-1 bottom-2.5 w-6 h-5"/>
-            <Input type="email" placeholder="Barcode" className="w-full"/>
+            <Input type="email" placeholder="Barcode" className="w-full bg-secondary"/>
         </div>
-        <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3">
+        <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3 bg-secondary">
             <>
             {
                 categ.map( 

@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog"
 import {
   Card,
@@ -23,13 +24,18 @@ import { Plus } from 'lucide-react';
 import {createItem} from "@/lib/actions/pos"
 import { useFormState } from "react-dom";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function AddItem() {
+    const {toast} = useToast();
+    const router = useRouter();
 
     const [state, formAction] = useFormState(createItem, {
         error: "",                                                                                                                                                                     
     });  
     const [csvData, setCsvData] = useState([]);
+    const [flag, setFlag] = useState(false);
 
     const handleFileUpload = (event:any) => {
         const file = event.target.files[0]; // Get the first file from the FileList
@@ -44,7 +50,8 @@ export default function AddItem() {
         reader.readAsText(file); // Read file as text
   };
 
-    const handleDataInsertion = ()=>{
+    const handleDataInsertion = ()=> {
+
         csvData.map(async (d:any,i:any) => {
                 const formData = new FormData();
                 formData.append('barcode', d.barcode);
@@ -57,8 +64,17 @@ export default function AddItem() {
                 formData.append('tags', d.tags);
                 formData.append('quantity', d.quantity)
                 formData.append('isAvailable', d.isAvailable);
-                await createItem(1, formData).then((t)=>console.log(t))
-            })
+                await createItem(1, formData).then((t)=>{
+                 console.log(t)
+                 router.refresh()
+                 toast({
+                    title: `${d.name} have been added`,
+                    description: "Friday, February 10, 2023 at 5:57 PM",
+                 })
+
+                })
+        })
+
     }
 
     function parseCsv(csvText:any) {
@@ -107,7 +123,9 @@ export default function AddItem() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
+      <DialogClose asChild>
         <Button className="w-36" onSubmit={handleDataInsertion} onClick={handleDataInsertion}>Add</Button>
+      </DialogClose>
       </CardFooter>
     </Card>
       </DialogContent>

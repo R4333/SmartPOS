@@ -52,6 +52,7 @@ interface Props{
     createdAt?: string,
 }
 import { useEffect , useState} from "react";
+import { useToast } from "@/components/ui/use-toast"
 
 
 const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => {
@@ -117,17 +118,18 @@ export default function Component() {
 
   const [data, setData] = useState([]);
 
+  const { toast } = useToast()
+
 
   useEffect(()=> {
-
-    getItems()
+    console.log("Hello")
     async function getItems(){
-        const response = await fetch("/api/inventory");
+        console.log("running get items")
+        const response = await fetch('/api/inventory', {cache: 'no-store'})
         const data = await response.json();
         setData(data['product'])
     }
     getItems()
-
   }, [])
 
   return (

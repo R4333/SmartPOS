@@ -14,16 +14,28 @@ interface SearchProps {
 const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
     const [query, setQuery] = useState('');
+    const [items, setItems] = useState([]);
+    const [categ, setCateg] = useState<any>(["all"]);
     const [barcode, setBarcode] = useState<any>(null);
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
-    const categ = ["all", "snacks", "beverages"]
 
-    const tags = Array.from({ length: 33 }).map(
-        (_, i:any, a:any) =>{return <ItemCard key={i} name={`Lemonade ${i}`} barcode={`ELEC00${i}`} category={i < 10 ? "snacks" : "beverages"}/>}
-    )
         useEffect(()=> {
             setQuery(globalSearchValue? globalSearchValue: "");
-            setData(tags);
+
+        async function getItems(){
+            const response = await fetch('/api/inventory', {cache: 'no-store'})
+            const data = await response.json();
+            setItems(data['product'])
+            console.log(data)
+            const newItemsArray:any[] = [];
+            data['product'].map((t:any,i:any) => {
+                setCateg([...categ, t.tags[0]])
+                newItemsArray.push(<ItemCard key={i} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]}/>)
+            })
+            setData(newItemsArray)
+        }
+
+        getItems()
 
         }, [])
 
@@ -36,10 +48,10 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
             if(query != '')
             {
-                const newTags = tags.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase()))
+                const newTags = items.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase()))
                 setData(newTags);
             }
-            else setData(tags)
+            else setData(items)
         }, [query])
  
             
@@ -66,6 +78,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         </div>
         <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3 bg-secondary">
             <>
+
             {
                 categ.map( 
                     (category, i:any, a:any) => {

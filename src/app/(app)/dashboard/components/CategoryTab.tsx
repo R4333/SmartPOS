@@ -25,7 +25,6 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         async function getItems(){
             const response = await fetch('/api/inventory', {cache: 'no-store'})
             const data = await response.json();
-            setItems(data['product'])
             console.log(data)
             const newItemsArray:any[] = [];
             data['product'].map((t:any,i:any) => {
@@ -33,6 +32,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
                 newItemsArray.push(<ItemCard key={i} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]}/>)
             })
             setData(newItemsArray)
+            setItems(newItemsArray)
         }
 
         getItems()

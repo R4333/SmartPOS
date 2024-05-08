@@ -38,42 +38,37 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import pic from '../../bg.png'
 import AddItem from "./components/AddItem";
+import {
+  itemTable,
+  saleTable,
+  saleItemTable,
+  createItemSchema,
+  updateItemSchema,
+  createSaleSchema,
+  updateSaleSchema,
+  createSaleItemSchema,
+  updateSaleItemSchema,
+} from "@/lib/db/schema/pos"
+import { db } from "@/lib/db/index";                                                                                                                                                    
+import {getItems} from "@/lib/actions/pos"
 
 
-export default function Component() {
-  const { toast } = useToast()
 
-  return (
-    <Card className="w-[97.5%] ml-5">
-      <CardHeader className="pt-5">
-        <CardTitle className="mb-4">Inventory</CardTitle>
-        <CardDescription className="flex justify-between">
-         Manage your items and their details 
-          <div className="mr-9">
-          <AddItem />
-          </div>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Sales
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+
+interface Props{
+    image?: string,
+    name?: string,
+    price?: string,
+    totalSales?: string,
+    createdAt?: string,
+}
+import { useEffect , useState} from "react";
+
+
+
+const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => {
+
+    return (
             <TableRow>
               <TableCell className="hidden sm:table-cell">
                 <Image
@@ -85,15 +80,15 @@ export default function Component() {
                 />
               </TableCell>
               <TableCell className="font-medium">
-                Laser Lemonade Machine
+               {name} 
               </TableCell>
               <TableCell>
                 <Badge variant="outline">Draft</Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell">$499.99</TableCell>
-              <TableCell className="hidden md:table-cell">25</TableCell>
+              <TableCell className="hidden md:table-cell">{`$${price}`}</TableCell>
+              <TableCell className="hidden md:table-cell">0</TableCell>
               <TableCell className="hidden md:table-cell">
-                2023-07-12 10:42 AM
+               {createdAt} 
               </TableCell>
               <TableCell>
                 <Dialog>
@@ -128,6 +123,68 @@ export default function Component() {
                 </Dialog>
               </TableCell>
             </TableRow> 
+
+    )
+}
+
+export default function Component() {
+
+  const { toast } = useToast()
+  const [data, setData] = useState<itemTable>(null);
+
+
+  useEffect(()=> {
+    const fetchData = async () => {
+        const result = await getItems(1); 
+        setData(result);
+    };
+    fetchData();
+
+  },[])
+
+  useEffect(()=> {
+      console.log(data)
+  },[data])
+
+  return (
+    <Card className="w-[97.5%] ml-5">
+      <CardHeader className="pt-5">
+        <CardTitle className="mb-4">Inventory</CardTitle>
+        <CardDescription className="flex justify-between">
+         Manage your items and their details 
+          <div className="mr-9">
+          <AddItem />
+          </div>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="hidden w-[100px] sm:table-cell">
+                <span className="sr-only">Image</span>
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="hidden md:table-cell">Price</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Total Sales
+              </TableHead>
+              <TableHead className="hidden md:table-cell">Created at</TableHead>
+              <TableHead>
+                <span className="sr-only">Actions</span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+          {
+            data ?  data.map((d:any, i:any) => {
+                      return (
+                        <TableEntry key={i} name={d.name} price={d.price} createdAt={(d.createdAt).toDateString()}/>
+                      )
+              }
+              ) : null
+          }
           </TableBody>
         </Table>
       </CardContent>

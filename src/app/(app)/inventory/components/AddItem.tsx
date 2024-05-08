@@ -44,25 +44,39 @@ export default function AddItem() {
         reader.readAsText(file); // Read file as text
   };
 
-    const parseCsv = (csvText:any) => {
-        const lines = csvText.split('\n'); // Split text into lines
-        const data = lines.map((line:any) => line.split(',')); // Split lines into arrays of values
-        console.log(data);
-        return data;
-  };
-    const formData = new FormData();
+    const handleDataInsertion = ()=>{
+        csvData.map(async (d:any,i:any) => {
+                const formData = new FormData();
+                formData.append('barcode', d.barcode);
+                formData.append('name', d.name);
+                formData.append('price', d.price);
+                formData.append('description', d.description);
+                formData.append('image', d.image);
+                formData.append('userId', "sdas");
+                formData.append('discount', d.discount);
+                formData.append('tags', d.tags);
+                formData.append('quantity', d.quantity)
+                formData.append('isAvailable', d.isAvailable);
+                await createItem(1, formData).then((t)=>console.log(t))
+            })
+    }
 
-    formData.append('barcode', 'ELEC001');
-    formData.append('name', 'Laptop');
-    formData.append('price', '999.99');
-    formData.append('description', 'Powerful laptop for work and entertainment.');
-    formData.append('image', 'laptop_image_url');
-    formData.append('userId', 'user_id_of_seller');
-    formData.append('discount', '0.1');
-    formData.append('tags', 'electronics laptop tech');
-    formData.append('quantity', '50')
-    formData.append('isAvailable', 'true');
+    function parseCsv(csvText:any) {
+      const lines = csvText.trim().split('\n'); // Split text into lines
+      const headers = lines.shift().split(','); // Remove and extract headers
 
+      // Parse lines into objects
+      const data = lines.map((line:any) => {
+        const values = line.split(',');
+        const obj:any = {};
+        headers.forEach((header:any, index:any) => {
+          obj[header.trim()] = values[index].trim();
+        });
+        return obj;
+      });
+
+      return data;
+    }
 
   return (
     <Dialog>
@@ -93,7 +107,7 @@ export default function AddItem() {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button className="w-36">Add</Button>
+        <Button className="w-36" onSubmit={handleDataInsertion} onClick={handleDataInsertion}>Add</Button>
       </CardFooter>
     </Card>
       </DialogContent>

@@ -212,7 +212,6 @@ export async function createItem(
     isAvailable: result.data.isAvailable,
   };
 
-    console.log("In 22here her")
   try {
 
     type NewUser = typeof itemTable.$inferInsert;
@@ -240,6 +239,10 @@ export async function createItem(
 
 }
 
+export async function getItems(_: any,){
+    const data = await db.select().from(itemTable);
+    return data;
+}
 //create sale
 
 export async function createSale(

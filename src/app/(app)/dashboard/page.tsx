@@ -17,7 +17,7 @@ return (
     <main className="">
       <pre className="flex flex-col justify-between pt-4 h-[900px]">
       <SearchBar onChange={handleChange}/>
-      <CategoryTab value={query}/>
+      <CategoryTab globalSearchValue={query}/>
       </pre>
       {/*<SignOutBtn />*/}
     </main>

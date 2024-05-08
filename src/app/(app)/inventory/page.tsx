@@ -1,4 +1,5 @@
 "use client"
+
 import {
   CardTitle,
   CardDescription,
@@ -7,6 +8,7 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card";
+
 import {
   TableHead,
   TableRow,
@@ -15,6 +17,7 @@ import {
   TableBody,
   Table,
 } from "@/components/ui/table";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
@@ -35,25 +38,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useToast } from "@/components/ui/use-toast"
+
 import pic from '../../bg.png'
 import AddItem from "./components/AddItem";
-import {
-  itemTable,
-  saleTable,
-  saleItemTable,
-  createItemSchema,
-  updateItemSchema,
-  createSaleSchema,
-  updateSaleSchema,
-  createSaleItemSchema,
-  updateSaleItemSchema,
-} from "@/lib/db/schema/pos"
-import { db } from "@/lib/db/index";                                                                                                                                                    
-import {getItems} from "@/lib/actions/pos"
 
-
-
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props{
     image?: string,
@@ -63,7 +52,6 @@ interface Props{
     createdAt?: string,
 }
 import { useEffect , useState} from "react";
-
 
 
 const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => {
@@ -105,9 +93,7 @@ const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => 
                         <DialogTrigger>Edit</DialogTrigger>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                    <Button  onClick={() => console.log(toast({description: "Item successfully removed"}))}>
                         Delete 
-                    </Button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -129,25 +115,23 @@ const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => 
 
 export default function Component() {
 
-  const { toast } = useToast()
-  const [data, setData] = useState<itemTable>(null);
+  const [data, setData] = useState([]);
 
 
   useEffect(()=> {
-    const fetchData = async () => {
-        const result = await getItems(1); 
-        setData(result);
-    };
-    fetchData();
 
-  },[])
+    getItems()
+    async function getItems(){
+        const response = await fetch("/api/inventory");
+        const data = await response.json();
+        setData(data['product'])
+    }
+    getItems()
 
-  useEffect(()=> {
-      console.log(data)
-  },[data])
+  }, [])
 
   return (
-    <Card className="w-[97.5%] ml-5">
+    <Card className="w-[97.5%] ml-5 pr-4 pl-4">
       <CardHeader className="pt-5">
         <CardTitle className="mb-4">Inventory</CardTitle>
         <CardDescription className="flex justify-between">
@@ -157,6 +141,7 @@ export default function Component() {
           </div>
         </CardDescription>
       </CardHeader>
+      <ScrollArea className="h-[750px] w-full rounded-md border p-4">
       <CardContent>
         <Table>
           <TableHeader>
@@ -177,10 +162,11 @@ export default function Component() {
             </TableRow>
           </TableHeader>
           <TableBody>
+
           {
             data ?  data.map((d:any, i:any) => {
                       return (
-                        <TableEntry key={i} name={d.name} price={d.price} createdAt={(d.createdAt).toDateString()}/>
+                        <TableEntry key={i} name={d.name} price={d.price} createdAt={d.createdAt} />
                       )
               }
               ) : null
@@ -188,8 +174,9 @@ export default function Component() {
           </TableBody>
         </Table>
       </CardContent>
+      </ScrollArea>
       <CardFooter>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground mt-2">
           Showing
           <strong>1-10</strong> of <strong>32</strong>
           products{"\n              "}

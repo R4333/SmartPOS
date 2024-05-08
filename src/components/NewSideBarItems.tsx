@@ -2,7 +2,7 @@
 import Link from "next/link"
 import {Tooltip,TooltipContent,TooltipTrigger,TooltipProvider} from "@/components/ui/tooltip"
 import { useState } from "react"
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Package,
   Package2,
@@ -10,11 +10,17 @@ import {
   ShoppingCart,
   Home,
 } from "lucide-react"
+import { handleClientScriptLoad } from "next/script";
 
 export default function NewSideBarItems(){
 
 const currentPath = usePathname();
 const [path, setPath] = useState(`${currentPath.split("/")[1]}`);
+const router = useRouter();
+const handleClick = (route:string)=> {
+    console.log(`Handling ${route}`)
+    router.push(`/${route}`);
+}
 return(
 <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r border-border bg-background sm:flex">
         <TooltipProvider>
@@ -28,37 +34,46 @@ return(
           </Link>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                href="/dashboard"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "dashboard" ? " bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
-              onClick={()=>setPath("dashboard")}>
+              <div
+                className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ${path === "dashboard" ? " bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+              onClick={()=> {
+                  setPath("dashboard")
+                  handleClick("dashboard")
+              }
+                    
+                  }>
                 <Home className="h-5 w-5" />
                 <span className="sr-only">Dashboard</span>
-              </Link>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">Dashboard</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                href="/inventory"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${path === "inventory" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
-              onClick={()=>setPath("inventory")}>
+              <div
+                className={`flex h-9 w-9  cursor-pointer items-center justify-center rounded-lg ${path === "inventory" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                onClick={()=> {
+                  setPath("inventory")
+                  handleClick("inventory")
+              }}>
                 <ShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Inventory</span>
-              </Link>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">Inventory</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
-                href="/account"
-                className={`flex h-9 w-9 items-center justify-center rounded-lg  ${path === "account" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
-              onClick={()=>setPath("account")}>
+              <div
+                className={`flex h-9 w-9 items-center  cursor-pointer justify-center rounded-lg  ${path === "account" ? "bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                onClick={()=> {
+                  setPath("account")
+                  handleClick("account")
+              }}>
+
                 <Package className="h-5 w-5" />
                 <span className="sr-only">Account</span>
-              </Link>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right">Account</TooltipContent>
           </Tooltip>

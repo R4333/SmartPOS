@@ -159,12 +159,21 @@ export async function createItem(
 
   const name = formData.get("name") ?? undefined;
   const barcode = formData.get("barcode") ?? undefined;
-  const price = parseInt(formData.get("price")) ?? undefined;
+
+  const prePrice = formData.get("price") as string;
+  const price = parseInt(prePrice) ?? undefined;
+
   const description = formData.get("description") ?? undefined;
   const image = formData.get("image") ?? undefined;
-  const tags = formData.get("tags").split(" ") ?? undefined;
-  const quantity = parseInt(formData.get("quantity")) ?? undefined;
-  const discount = parseFloat(formData.get("discount")) ?? undefined;
+  const preTags = formData.get("tags") as string;
+  const tags = preTags.split(" ") ?? undefined;
+
+  const preQuant = formData.get("quantity") as string;
+  const quantity = parseInt(preQuant) ?? undefined;
+  
+  const preDiscount= formData.get("discount") as string;
+  const discount = parseFloat(preDiscount) ?? undefined;
+
   const userId = "saada jee";
 
   const result = createItemSchema.safeParse({
@@ -219,7 +228,7 @@ export async function createItem(
     const newUser: NewUser ={
       barcode: itemvals.barcode,
       name: itemvals.name,
-      price: itemvals.price,
+      price: itemvals.price.toString(),
       description: itemvals.description,
       image: itemvals.image,
       userId: itemvals.userId,
@@ -239,10 +248,6 @@ export async function createItem(
 
 }
 
-export async function getItems(_: any,){
-    const data = await db.select().from(itemTable);
-    return data;
-}
 //create sale
 
 export async function createSale(

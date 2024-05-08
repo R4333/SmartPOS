@@ -14,9 +14,10 @@ interface SearchProps {
 const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
     const [query, setQuery] = useState('');
-    const [barcode, setBarcode] = useState('');
+    const [barcode, setBarcode] = useState<any>(null);
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
     const categ = ["all", "snacks", "beverages"]
+
     const tags = Array.from({ length: 33 }).map(
         (_, i:any, a:any) =>{return <ItemCard key={i} name={`Lemonade ${i}`} barcode={`ELEC00${i}`} category={i < 10 ? "snacks" : "beverages"}/>}
     )
@@ -61,7 +62,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         </TabsList>
         <div className="relative w-[10%] mt-8 ml-2"> 
             <Barcode className="absolute right-1.5 bottom-2.5 w-6 h-5 text-muted-foreground"/>
-            <Input type="text" placeholder="Barcode" onSubmit={(e)=>setBarcode(e.target.value)} className="w-full bg-secondary"/>
+            <Input type="text" placeholder="Barcode" onSubmit={(e)=>setBarcode(e.target)} className="w-full bg-secondary"/>
         </div>
         <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3 bg-secondary">
             <>

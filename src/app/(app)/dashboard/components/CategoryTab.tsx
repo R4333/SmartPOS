@@ -83,7 +83,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
             <Input type="text" placeholder="Barcode" onSubmit={(e)=>setBarcode(e.target)} className="w-full bg-secondary"/>
         </div>
         <div className="flex flex-row justify-between w-[100%]">
-        <ScrollArea className="h-[45rem] max-w-[73%] w-auto rounded-md border mt-2 mb-3 pt-3 bg-secondary">
+        <ScrollArea className="h-[45rem] min-w-[73%] w-[73%] rounded-md border mt-2 mb-3 pt-3 bg-secondary">
             <>
 
             {

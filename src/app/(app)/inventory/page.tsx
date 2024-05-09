@@ -1,5 +1,3 @@
-"use client"
-
 import {
   CardTitle,
   CardDescription,
@@ -13,124 +11,18 @@ import {
   TableHead,
   TableRow,
   TableHeader,
-  TableCell,
   TableBody,
   Table,
 } from "@/components/ui/table";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Image from 'next/image';
+import BodyTable from "./components/BodyTable";
 
-import {
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenu,
-} from "@/components/ui/dropdown-menu";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
-import pic from '../../bg.png'
 import AddItem from "./components/AddItem";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface Props{
-    image?: string,
-    name?: string,
-    price?: string,
-    totalSales?: string,
-    createdAt?: string,
-}
-import { useEffect , useState} from "react";
-import { useToast } from "@/components/ui/use-toast"
-
-
-const TableEntry:React.FC<Props> = ({image,name,price,totalSales,createdAt}) => {
-
-    return (
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src={pic}
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-               {name} 
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">Draft</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">{`$${price}`}</TableCell>
-              <TableCell className="hidden md:table-cell">0</TableCell>
-              <TableCell className="hidden md:table-cell">
-               {createdAt} 
-              </TableCell>
-              <TableCell>
-                <Dialog>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost" className="bg-secondary border-2 border-secondary text-primary">
-                      <MoveHorizontalIcon className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>
-                        <DialogTrigger>Edit</DialogTrigger>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Delete 
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Are you absolutely sure?</DialogTitle>
-                          <DialogDescription>
-                            This action cannot be undone. This will permanently delete your account
-                            and remove your data from our servers.
-                          </DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
-                </Dialog>
-              </TableCell>
-            </TableRow> 
-
-    )
-}
 
 export default function Component() {
-
-  const [data, setData] = useState([]);
-
-  const { toast } = useToast()
-
-
-  useEffect(()=> {
-    console.log("Hello")
-    async function getItems(){
-        console.log("running get items")
-        const response = await fetch('/api/inventory', {cache: 'no-store'})
-        const data = await response.json();
-        setData(data['product'])
-    }
-    getItems()
-  }, [])
 
   return (
     <Card className="w-[97.5%] ml-5 pr-4 pl-4">
@@ -163,17 +55,7 @@ export default function Component() {
               </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-
-          {
-            data ?  data.map((d:any, i:any) => {
-                      return (
-                        <TableEntry key={i} name={d.name} price={d.price} createdAt={d.createdAt} />
-                      )
-              }
-              ) : null
-          }
-          </TableBody>
+          <BodyTable />
         </Table>
       </CardContent>
       </ScrollArea>
@@ -188,23 +70,3 @@ export default function Component() {
   );
 }
 
-function MoveHorizontalIcon(props:any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="18 8 22 12 18 16" />
-      <polyline points="6 8 2 12 6 16" />
-      <line x1="2" x2="22" y1="12" y2="12" />
-    </svg>
-  );
-}

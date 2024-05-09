@@ -14,7 +14,7 @@ interface SearchProps {
 const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
     const [query, setQuery] = useState('');
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<any>([]);
     const [categ, setCateg] = useState<any>(["all"]);
     const [barcode, setBarcode] = useState<any>(null);
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
@@ -25,14 +25,19 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         async function getItems(){
             const response = await fetch('/api/inventory', {cache: 'no-store'})
             const data = await response.json();
-            console.log(data)
             const newItemsArray:any[] = [];
+            const newArray:any[] = ["all"];
             data['product'].map((t:any,i:any) => {
-                setCateg([...categ, t.tags[0]])
+                (() => {
+                    if (newArray.length === 0 || newArray[newArray.length - 1] !== t.tags[0]) {
+                        newArray.push(t.tags[0])
+                    }
+                })()
                 newItemsArray.push(<ItemCard key={i} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]}/>)
             })
             setData(newItemsArray)
             setItems(newItemsArray)
+            setCateg(newArray)
         }
 
         getItems()
@@ -48,7 +53,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
             if(query != '')
             {
-                const newTags = items.filter((item) =>item.props.name.toLowerCase().includes(query.toLowerCase()))
+                const newTags = items.filter((item:any) =>item.props.name.toLowerCase().includes(query.toLowerCase()))
                 setData(newTags);
             }
             else setData(items)
@@ -57,11 +62,11 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
             
 
         return (
-    <Tabs defaultValue="snacks" className="w-[90%] mb-16 ml-3 mt-9 focus:bg-background focus-visible:bg-background">
+    <Tabs defaultValue="all" className="w-[90%] mb-16 ml-3 mt-9 focus:bg-background focus-visible:bg-background">
         <TabsList className="bg-muted border-[0.2px] w-full bg-secondary ">
             <TabsTrigger value="all" className="w-36 text-md focus:bg-background focus-visible:bg-background">All</TabsTrigger>
             <TabsTrigger value="snacks" className="w-36 text-md focus:bg-background focus-visible:bg-background">Snacks</TabsTrigger>
-            <TabsTrigger value="beverages" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Beverages</TabsTrigger>
+            <TabsTrigger value="beverage" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Beverages</TabsTrigger>
             <TabsTrigger value="dairy" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Dairy</TabsTrigger>
             <TabsTrigger value="bakery" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Bakery</TabsTrigger>
             <TabsTrigger value="electronics" className=" w-36 text-md focus:bg-background focus-visible:bg-background">Electronics</TabsTrigger>
@@ -81,7 +86,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
             {
                 categ.map( 
-                    (category, i:any, a:any) => {
+                    (category:any, i:any, a:any) => {
                         return(
                             <TabsContent key={i} value={category}>
                             <div className="flex flex-row flex-wrap items-center">

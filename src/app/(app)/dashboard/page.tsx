@@ -4,7 +4,7 @@ import { getUserAuth } from "@/lib/auth/utils";
 import SearchBar from "./components/Search";
 import CategoryTab from "./components/CategoryTab";
 import {useState} from 'react'
-
+import Cart from "./components/Cart";
 export default function Home() {
 
 const [query, setQuery] = useState("")

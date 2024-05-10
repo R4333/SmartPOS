@@ -25,20 +25,34 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     }
 
     const disableHandler = (value2?:string)=> { 
-       console.log("Disbale", value2)
        setData(prevData => prevData.map(item => {
             if (item.key === value2) {
                 return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
             }
             return item;
-    }));    
+
+       }));    
+
+       setItems((prevData:any) => prevData.map((item:any) => {
+            if (item.key === value2) {
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
+            }
+            return item;
+
+       }));    
+
+
 
     }
     const enableHandler = (value2?:string)=> {
-        console.log("Enable", value2)
-       setData(prevData => prevData.map(item => {
+        setData(prevData => prevData.map(item => {
             if (item.key === value2) {
-                console.log(item)
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={false} setDisable={disableHandler}/>
+            }
+            return item;
+    }));    
+        setItems((prevData:any) => prevData.map((item:any) => {
+            if (item.key === value2) {
                 return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={false} setDisable={disableHandler}/>
             }
             return item;
@@ -46,11 +60,8 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
 
 
-    }
 
-    useEffect(()=> {
-        console.log(disable)
-    },[disable])
+    }
 
     useEffect(()=> {
             setQuery(globalSearchValue? globalSearchValue: "");

@@ -20,7 +20,6 @@ const ItemCard: React.FC<props> = (props) =>  {
   
 const handleClick = (event:React.ChangeEvent<HTMLInputElement>) => {
       const customData = JSON.parse(event.target.getAttribute('data-custom'));
-      console.log(customData)
       props.onChange && props.onChange(customData)
       props.setDisable && props.setDisable(customData.barcode)
       }

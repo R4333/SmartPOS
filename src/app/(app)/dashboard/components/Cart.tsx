@@ -43,6 +43,7 @@ function generateUniqueString(length:number) {
     }
     return result;
 }
+
 const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
     const [unique, setUnique] = useState<string>("");
@@ -58,13 +59,15 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
     const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
        const barcode = event.target.getAttribute('data-custom')
+       const filteredItems = items.filter(item => item.key !== barcode);
+       console.log(filteredItems)
        setItems(items.filter(item => item.key !== barcode))
        setHandler && setHandler(barcode)
     }
 
     useEffect(()=> {
-    if(itemInfo.price !== undefined){
-     setItems((prevArray:any) => [...prevArray, 
+        if(itemInfo.price !== undefined){
+        setItems((prevArray:any) => [...prevArray, 
                 <li className="flex" key={itemInfo.barcode}>
                       <Button variant="ghost" className="h-6 w-6 p-0 m-0 mr-4" data-custom={itemInfo.barcode} onClick={handleDecrement}>
                       <Minus className="h-4 w-4"  data-custom={itemInfo.barcode}/>
@@ -77,8 +80,9 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                       </Button>
                       <span className="ml-40">{`$${itemInfo != null ? itemInfo.price: " "}`}</span>
                 </li>
-    ])                
-    }
+        ])                
+        }
+
     },[itemInfo])
 
      return(

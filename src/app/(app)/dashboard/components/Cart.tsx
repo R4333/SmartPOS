@@ -20,18 +20,74 @@ import {
   CreditCard,
   MoreVertical,
   Truck,
+  Plus,
+  Minus
 } from "lucide-react"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+
+import { generateKey } from "crypto"
+import { useEffect, useState } from "react"
 
 
-export default function Cart(){
+interface Props{
+    itemInfo?: Object;
+    setHandler?: (value:string | null) => void
+}
 
-    return(
+function generateUniqueString(length:number) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
+
+    const [unique, setUnique] = useState<string>("");
+    const [items, setItems] = useState<React.JSX.Element[]>([]);
+
+    useEffect(()=> {
+        setUnique(generateUniqueString(7));
+    },[])
+
+    const handleIncrement= (event:React.ChangeEvent<HTMLInputElement>) => {
+
+    }
+
+    const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
+       const barcode = event.target.getAttribute('data-custom')
+       setItems(items.filter(item => item.key !== barcode))
+       setHandler && setHandler(barcode)
+    }
+
+    useEffect(()=> {
+    if(itemInfo.price !== undefined){
+     setItems((prevArray:any) => [...prevArray, 
+                <li className="flex" key={itemInfo.barcode}>
+                      <Button variant="ghost" className="h-6 w-6 p-0 m-0 mr-4" data-custom={itemInfo.barcode} onClick={handleDecrement}>
+                      <Minus className="h-4 w-4"  data-custom={itemInfo.barcode}/>
+                      </Button>
+                      <span className="text-muted-foreground">
+                       {itemInfo != null ? itemInfo.name: " "} <span>2</span>
+                      </span>
+                      <Button variant="ghost" className="h-6 w-6 p-0 m-0 ml-4" data-custom={itemInfo.barcode} >
+                      <Plus className="h-4 w-4" />
+                      </Button>
+                      <span className="ml-40">{`$${itemInfo != null ? itemInfo.price: " "}`}</span>
+                </li>
+    ])                
+    }
+    },[itemInfo])
+
+     return(
     <div className="w-1/4">
             <Card className="overflow-hidden w-full h-[730px]" x-chunk="dashboard-05-chunk-4">
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    Order Oe31b70H
+                    Order# {unique}
                     <Button
                       size="icon"
                       variant="outline"
@@ -56,18 +112,11 @@ export default function Cart(){
                 <div className="grid gap-3">
                   <div className="font-semibold">Order Details</div>
                   <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Glimmer Lamps x <span>2</span>
-                      </span>
-                      <span>$250.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Aqua Filters x <span>1</span>
-                      </span>
-                      <span>$49.00</span>
-                    </li>
+                  <ScrollArea className="h-36">
+                     {itemInfo.price !== undefined ?
+                      items.map((t:any, i:any) => {return t}) : null
+                     }
+                  </ScrollArea>
                   </ul>
                   <Separator className="my-2" />
                   <ul className="grid gap-3">
@@ -141,3 +190,5 @@ export default function Cart(){
     </div>
     )
 }
+
+export default Cart;

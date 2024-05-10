@@ -11,7 +11,6 @@ import Cart from "./Cart"
 interface SearchProps {
   globalSearchValue?: string;
 }
-
 const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
     const [query, setQuery] = useState('');
@@ -19,8 +18,41 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     const [categ, setCateg] = useState<any>(["all"]);
     const [barcode, setBarcode] = useState<any>(null);
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
+    const [itemObject, setItemObject] = useState<Object>({});
+    const [disable, setDisable] = useState<boolean>(false);
+    const handleClick = (value: Object)=> {
+       setItemObject(value) 
+    }
 
-        useEffect(()=> {
+    const disableHandler = (value2?:string)=> { 
+       console.log("Disbale", value2)
+       setData(prevData => prevData.map(item => {
+            if (item.key === value2) {
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
+            }
+            return item;
+    }));    
+
+    }
+    const enableHandler = (value2?:string)=> {
+        console.log("Enable", value2)
+       setData(prevData => prevData.map(item => {
+            if (item.key === value2) {
+                console.log(item)
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={false} setDisable={disableHandler}/>
+            }
+            return item;
+    }));    
+
+
+
+    }
+
+    useEffect(()=> {
+        console.log(disable)
+    },[disable])
+
+    useEffect(()=> {
             setQuery(globalSearchValue? globalSearchValue: "");
 
         async function getItems(){
@@ -34,7 +66,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
                         newArray.push(t.tags[0])
                     }
                 })()
-                newItemsArray.push(<ItemCard key={i} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]}/>)
+                newItemsArray.push(<ItemCard key={t.barcode} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]} onChange={handleClick} disable={disable === true} setDisable={disableHandler}/>)
             })
             setData(newItemsArray)
             setItems(newItemsArray)
@@ -104,7 +136,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
             }
             </>
         </ScrollArea>
-        <Cart />
+        <Cart itemInfo={itemObject} setHandler={enableHandler}/>
        </div>
    </Tabs>
 

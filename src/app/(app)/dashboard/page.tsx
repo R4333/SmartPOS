@@ -8,6 +8,7 @@ import Cart from "./components/Cart";
 export default function Home() {
 
 const [query, setQuery] = useState("")
+const [selected, setSelected] = useState<Object>({});
 
 const handleChange = (value: string) => {
     setQuery(value);

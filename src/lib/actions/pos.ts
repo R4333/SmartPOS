@@ -257,24 +257,31 @@ export async function createSale(
   const { session } = await getUserAuth();
   if (!session) return { error: "Unauthorised" };
 
-  const total = formData.get("total") ?? undefined;
+  const preTotal = formData.get("total") as string;
+  const total = parseFloat(preTotal) ?? undefined;
 
   const result = createSaleSchema.safeParse({
+    id: generateId(15),
     userId: session.user.id,
     total,
   });
 
+  console.log("after result")
   if (!result.success) {
+    console.log(result)
     const error = result.error.flatten().fieldErrors;
+    console.log(error)
     if (error.total) return { error: "Invalid total - " + error.total[0] };
     return genericError;
   }
 
+  console.log("After error checking in result")
   const saleVals: Sale = {
     id: generateId(15),
     userId: result.data.userId,
     total: result.data.total,
   };
+  console.log("After saleVals")
 
   try {
 
@@ -285,8 +292,10 @@ export async function createSale(
       total: String(saleVals.total),
     }
     await db.insert(saleTable).values(newUser);
+    console.log("wargye")
     return { success: true, error: "" };
   } catch (e) {
+    console.log(e)
     return genericError;
   }
 

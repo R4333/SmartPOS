@@ -2,7 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ItemCard from "./ItemCard"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Barcode} from 'lucide-react';
 import Cart from "./Cart"
@@ -12,14 +12,17 @@ interface SearchProps {
   globalSearchValue?: string;
 }
 const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
+    
+    const inputRef = useRef(null);
 
     const [query, setQuery] = useState('');
     const [items, setItems] = useState<any>([]);
     const [categ, setCateg] = useState<any>(["all"]);
-    const [barcode, setBarcode] = useState<any>(null);
+    const [barcode, setBarcode] = useState<string>("");
     const [filteredData, setData] = useState<React.JSX.Element[]>([]);
     const [itemObject, setItemObject] = useState<Object>({});
     const [disable, setDisable] = useState<boolean>(false);
+
     const handleClick = (value: Object)=> {
        setItemObject(value) 
     }
@@ -44,6 +47,31 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
 
     }
+    
+    const handleBarcode = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+        event.preventDefault();
+        setBarcode(event.target.value)
+        console.log(barcode)
+        const selectedItem = items.filter((item:any) => item.props.barcode === barcode);
+        console.log(selectedItem)
+        if(selectedItem[0] != undefined){
+            if(selectedItem[0].props.disable != true){
+                disableHandler(selectedItem[0].props.barcode)
+                setItemObject(selectedItem[0].props)
+            }
+        }
+        setBarcode("")
+        inputRef.current.blur();
+
+
+    }
+
+    const handleChange= (event: React.ChangeEvent<HTMLInputElement>) => {
+       if((event.target.value).length < 6) setBarcode(event.target.value)
+
+    }
+
     const enableHandler = (value2?:string)=> {
         setData(prevData => prevData.map(item => {
             if (item.key === value2) {
@@ -123,7 +151,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         </TabsList>
         <div className="relative w-[10%] mt-8 ml-2"> 
             <Barcode className="absolute right-1.5 bottom-2.5 w-6 h-5 text-muted-foreground"/>
-            <Input type="text" placeholder="Barcode" onSubmit={(e)=>setBarcode(e.target)} className="w-full bg-secondary"/>
+            <form onSubmit={handleBarcode}><Input type="text" ref={inputRef} placeholder="Barcode" onChange={handleChange} value={barcode} pattern="[A-Za-z]{2}\d{3}" className="w-full bg-secondary" maxLength={5} /></form>
         </div>
         <div className="flex flex-row justify-between w-[100%]">
         <ScrollArea className="h-[45rem] min-w-[73%] w-[73%] rounded-md border mt-2 mb-3 pt-3 bg-secondary">

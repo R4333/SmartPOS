@@ -5,7 +5,8 @@ export default {
   schema: "./src/lib/db/schema",
   out: "./src/lib/db/migrations",
   driver: "pg",
+  dialect: "postgresql",
   dbCredentials: {
-    connectionString: env.DATABASE_URL,
+    url: env.DATABASE_URL,
   }
 } satisfies Config;

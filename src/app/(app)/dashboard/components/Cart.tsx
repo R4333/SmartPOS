@@ -59,16 +59,19 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
     const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
        const barcode = event.target.getAttribute('data-custom')
-       const filteredItems = items.filter(item => item.key !== barcode);
-       console.log(filteredItems)
-       setItems(items.filter(item => item.key !== barcode))
+       const newArray:any[] = [];
+       items.map((item) => {
+        if(item.props.barcode !== barcode) newArray.push(item)
+       })
+       setItems(newArray)
        setHandler && setHandler(barcode)
     }
 
     useEffect(()=> {
         if(itemInfo.price !== undefined){
+        let i = 0;
         setItems((prevArray:any) => [...prevArray, 
-                <li className="flex" key={itemInfo.barcode}>
+                <li className="flex" key={itemInfo.name}>
                       <Button variant="ghost" className="h-6 w-6 p-0 m-0 mr-4" data-custom={itemInfo.barcode} onClick={handleDecrement}>
                       <Minus className="h-4 w-4"  data-custom={itemInfo.barcode}/>
                       </Button>

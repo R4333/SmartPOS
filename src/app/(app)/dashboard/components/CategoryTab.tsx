@@ -27,7 +27,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     const disableHandler = (value2?:string)=> { 
        setData(prevData => prevData.map(item => {
             if (item.key === value2) {
-                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} discount= {item.props.discount}price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
             }
             return item;
 
@@ -35,7 +35,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
        setItems((prevData:any) => prevData.map((item:any) => {
             if (item.key === value2) {
-                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} discount= {item.props.discount} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
             }
             return item;
 
@@ -77,7 +77,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
                         newArray.push(t.tags[0])
                     }
                 })()
-                newItemsArray.push(<ItemCard key={t.barcode} name={t.name} barcode={t.barcode} price={t.price} category={t.tags[0]} onChange={handleClick} disable={disable === true} setDisable={disableHandler}/>)
+                newItemsArray.push(<ItemCard key={t.barcode} name={t.name} barcode={t.barcode} price={t.price} discount= {t.discount} category={t.tags[0]} onChange={handleClick} disable={disable === true} setDisable={disableHandler}/>)
             })
             setData(newItemsArray)
             setItems(newItemsArray)

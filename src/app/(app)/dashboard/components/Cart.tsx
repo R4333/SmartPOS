@@ -59,31 +59,14 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
     const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
        const barcode = event.target.getAttribute('data-custom')
-       const newArray:any[] = [];
-       items.map((item) => {
-        if(item.props.barcode !== barcode) newArray.push(item)
-       })
-       setItems(newArray)
+       setItems(items.filter((item:any) => item.barcode!== barcode)) 
        setHandler && setHandler(barcode)
     }
 
     useEffect(()=> {
         if(itemInfo.price !== undefined){
         let i = 0;
-        setItems((prevArray:any) => [...prevArray, 
-                <li className="flex" key={itemInfo.name}>
-                      <Button variant="ghost" className="h-6 w-6 p-0 m-0 mr-4" data-custom={itemInfo.barcode} onClick={handleDecrement}>
-                      <Minus className="h-4 w-4"  data-custom={itemInfo.barcode}/>
-                      </Button>
-                      <span className="text-muted-foreground">
-                       {itemInfo != null ? itemInfo.name: " "} <span>2</span>
-                      </span>
-                      <Button variant="ghost" className="h-6 w-6 p-0 m-0 ml-4" data-custom={itemInfo.barcode} >
-                      <Plus className="h-4 w-4" />
-                      </Button>
-                      <span className="ml-40">{`$${itemInfo != null ? itemInfo.price: " "}`}</span>
-                </li>
-        ])                
+        setItems((prevArray:any) => [...prevArray, itemInfo])                
         }
 
     },[itemInfo])
@@ -118,13 +101,26 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
               <CardContent className="p-6 text-sm">
                 <div className="grid gap-3">
                   <div className="font-semibold">Order Details</div>
-                  <ul className="grid gap-3">
                   <ScrollArea className="h-36">
+                  <ul className="grid gap-3">
                      {itemInfo.price !== undefined ?
-                      items.map((t:any, i:any) => {return t}) : null
+                         items.map((t:any, i:any) => { 
+                                return (<li className="flex" key={t.barcode}>
+                                  <Button variant="ghost" className="h-6 w-6 p-0 m-0 mr-4" datacustom={t.barcode} onClick={handleDecrement}>
+                                  <Minus className="h-4 w-4"  data-custom={t.barcode}/>
+                                  </Button>
+                                  <span className="text-muted-foreground">
+                                   {t != null ? t.name: " "} <span>2</span>
+                                  </span>
+                                  <Button variant="ghost" className="h-6 w-6 p-0 m-0 ml-4" data-custom={t.barcode} >
+                                  <Plus className="h-4 w-4" />
+                                  </Button>
+                                  <span className="ml-40">{`$${t != null ? t.price: " "}`}</span>
+                                </li>)
+                         }) : null
                      }
-                  </ScrollArea>
                   </ul>
+                  </ScrollArea>
                   <Separator className="my-2" />
                   <ul className="grid gap-3">
                     <li className="flex items-center justify-between">

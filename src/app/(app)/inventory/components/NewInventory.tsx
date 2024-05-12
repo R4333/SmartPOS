@@ -101,6 +101,7 @@ export default function NewInventory() {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [flag, setFlag] = React.useState<boolean>(true);
+  const [barcodeQueue, setBarcodeQueue] = React.useState<string[]>([]);
 
 
   const handleInput = (e:React.ChangeEvent<HTMLInputElement>)=> {
@@ -125,7 +126,7 @@ export default function NewInventory() {
           });
           if (response.ok) {
             console.log('Post request successful');
-            setData(data.filter((item:any)=> item.barcode !== barcode))
+            setBarcodeQueue(prevItems => [...prevItems, barcode])
             toast2(`${name} has been deleted`,{
                 description:"Friday, Febraury 10, 2023 at 5:37 PM"
             })
@@ -352,14 +353,19 @@ export default function NewInventory() {
            e.preventDefault();
            if(table.getRowModel().rows.length != 0){
             const rows = Object.keys(rowSelection)
-            console.log(rows)
-            console.log(table.getRowModel().rows)
             rows.map((r:any) => handleSubmit(table.getPaginationRowModel().rowsById[r].original.barcode, table.getPaginationRowModel().rowsById[r].original.name))
             setRowSelection({})
             }
 
 
   }  
+
+
+  useEffect(()=> {
+
+     setData(data.filter((item:any) => !(barcodeQueue.includes(item.barcode))))
+
+  },[barcodeQueue])
 
   return (
     <div className="w-full h-[350px]">

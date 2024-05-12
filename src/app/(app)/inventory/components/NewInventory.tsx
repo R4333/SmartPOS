@@ -2,6 +2,15 @@
 
 import * as React from "react"
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+
+import {
   CaretSortIcon,
   ChevronDownIcon,
   DotsHorizontalIcon,
@@ -167,9 +176,18 @@ export const columns: ColumnDef<Payment>[] = [
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>
-                        <DialogTrigger>Edit</DialogTrigger>
-                    </DropdownMenuItem>
+                        <Sheet>
+                          <SheetTrigger className="w-full text-start"><Button variant="ghost" className="justify-start text-start p-0 pl-2 w-full text-[0.875rem]">Edit</Button></SheetTrigger>
+                          <SheetContent side='bottom' className="h-[600px]">
+                            <SheetHeader>
+                              <SheetTitle>Are you absolutely sure?</SheetTitle>
+                              <SheetDescription>
+                                This action cannot be undone. This will permanently delete your account
+                                and remove your data from our servers.
+                              </SheetDescription>
+                            </SheetHeader>
+                          </SheetContent>
+                        </Sheet> 
                     <DropdownMenuItem>
                         <DialogTrigger>Delete</DialogTrigger>
                     </DropdownMenuItem>

@@ -11,6 +11,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({onChange}) => {
 const [focus, setFocus] = useState(false)
+const [searchValue, setSearchValue] = useState('');
 
 
 const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

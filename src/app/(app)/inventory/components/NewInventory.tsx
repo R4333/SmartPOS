@@ -145,7 +145,7 @@ export default function NewInventory() {
         </Button>
       )
     },
-    cell: ({ row }) => <div className="w-[150px] ml-3">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="ml-3">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "quantity",

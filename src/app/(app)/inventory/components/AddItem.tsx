@@ -100,7 +100,7 @@ export default function AddItem() {
         <Button variant="outline" className="bg-primary text-secondary"><Plus /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-      <Card className="w-full border-0">
+      <Card className="w-full border-0 bg-background">
       <CardContent>
         <div className="grid w-full max-w-sm items-center gap-1.5 mb-9 mt-3">
             <h1 className="font-bold">Add via CSV</h1>

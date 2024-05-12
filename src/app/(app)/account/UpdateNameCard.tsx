@@ -30,7 +30,7 @@ export default function UpdateNameCard({ name }: { name: string }) {
     >
       <form action={formAction}>
         <AccountCardBody>
-          <Input defaultValue={name ?? ""} name="name" />
+          <Input defaultValue={name ?? ""} name="name" className="bg-secondary" />
         </AccountCardBody>
         <AccountCardFooter description="64 characters maximum">
           <Submit />

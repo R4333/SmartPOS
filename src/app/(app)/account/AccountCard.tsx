@@ -12,7 +12,7 @@ interface AccountCardProps {
 export function AccountCard({ params, children }: AccountCardProps) {
   const { header, description } = params;
   return (
-    <Card className="w-[98%]">
+    <Card className="w-[98%] bg-background">
       <div id="body" className="p-4 ">
         <h3 className="text-xl font-semibold">{header}</h3>
         <p className="text-muted-foreground">{description}</p>

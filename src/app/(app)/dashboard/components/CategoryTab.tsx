@@ -163,10 +163,10 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
                         return(
                             <TabsContent key={i} value={category}>
                             <div className="flex flex-row flex-wrap items-center">
-                                {filteredData.map((tag:any, index:any) => {
+                                {filteredData.length != 0 ? filteredData.map((tag:any, index:any) => {
                                     if(category === "all") return (tag)
                                     return tag.props.category == category ? (tag) : null
-                                    })}
+                                    }): <div className="ml-[48%] mt-[25%]" >No Results</div>}
                             </div>
                             </TabsContent>
                         )

@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
+import { Separator } from "@/components/ui/separator"
 import {
   CaretSortIcon,
   ChevronDownIcon,
@@ -62,15 +63,39 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export type Payment = {
-  id: string
-  price: number
-  status: "pending" | "processing" | "success" | "failed"
-  totalSales: number,
-  name: string
-}
+import { ReloadIcon } from "@radix-ui/react-icons"
 
-export const columns: ColumnDef<Payment>[] = [
+import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
+
+
+export default function NewInventory() {
+
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const router = useRouter();
+  const {toast} = useToast();
+
+  const [data, setData] = React.useState<any>([]);
+
+  React.useEffect(()=> {
+    async function getItems(){
+        const response = await fetch('/api/inventory', {cache: 'no-store'})
+        const data = await response.json();
+        setData(data['product'])
+    }
+    getItems()
+  }, [])
+
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [flag, setFlag] = React.useState<boolean>(true);
+
+
+ const columns: ColumnDef<Payment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -97,7 +122,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "isAvailable",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("isAvailable")}</div>
+      <div className="capitalize">{row.getValue("isAvailable") ? "Available" : "Not Available"}</div>
     ),
   },
   {
@@ -121,6 +146,13 @@ export const columns: ColumnDef<Payment>[] = [
       )
     },
     cell: ({ row }) => <div className="w-[150px] ml-3">{row.getValue("name")}</div>,
+  },
+  {
+    accessorKey: "quantity",
+    header: "Quantity",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("quantity")}</div>
+    ),
   },
   {
     accessorKey: "tags",
@@ -162,7 +194,52 @@ export const columns: ColumnDef<Payment>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+
+      const handleSubmit = async (event:React.ChangeEvent<HTMLInputElement>) => {
+        setFlag(false)
+        toast({
+            title: "Please Wait",
+            description: "Your Item is being deleted"
+        })
+        event.preventDefault();
+        const barcode = String(row.getValue("barcode"));
+        try {
+          const response = await fetch('/api/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({barcode: barcode}),
+          });
+          if (response.ok) {
+            console.log('Post request successful');
+            setData(data.filter((item:any)=> item.barcode !== barcode))
+            toast({
+                title:`${String(row.getValue("name"))} has been deleted`,
+                description:"Friday, Febraury 10, 2023 at 5:37 PM"
+            })
+            setFlag(true);
+          } else {
+            console.error('Post request failed');
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "There was a problem with your request.",
+            })
+
+          }
+        } catch (error) {
+          console.error('Error occurred while making the post request:', error);
+           toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "There was a problem with your request.",
+            })
+
+
+       }
+      }
+
 
       return (
        
@@ -176,6 +253,7 @@ export const columns: ColumnDef<Payment>[] = [
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <Separator />
                         <Sheet>
                           <SheetTrigger className="w-full text-start"><Button variant="ghost" className="justify-start text-start p-0 pl-2 w-full text-[0.875rem]">Edit</Button></SheetTrigger>
                           <SheetContent side='bottom' className="h-[600px]">
@@ -208,9 +286,8 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                       </DialogClose>
                       <DialogClose asChild>
-                      <Button type="button" variant="destructive">
-                      Yes
-                      </Button>
+                          {flag ? <Button type="button" onClick={handleSubmit} variant="destructive">Yes</Button>
+                          :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
                       </DialogClose>
                     </DialogFooter>
                 </DialogContent>
@@ -219,30 +296,6 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
 ]
-
-export default function NewInventory() {
-
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-
-  const [data, setData] = React.useState<any>([]);
-
-  React.useEffect(()=> {
-    async function getItems(){
-        const response = await fetch('/api/inventory', {cache: 'no-store'})
-        const data = await response.json();
-        setData(data['product'])
-        console.log(data)
-    }
-    getItems()
-  }, [])
-
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-
   const table = useReactTable({
     data,
     columns,
@@ -261,6 +314,7 @@ export default function NewInventory() {
       rowSelection,
     },
   })
+
 
   return (
     <div className="w-full h-[350px]">
@@ -323,10 +377,7 @@ export default function NewInventory() {
           <TableBody className="">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(

@@ -71,6 +71,9 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
+import { toast as toast2} from "sonner" 
+
+import { useEffect } from "react"
 
 
 export default function NewInventory() {
@@ -79,12 +82,12 @@ export default function NewInventory() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
-  const router = useRouter();
   const {toast} = useToast();
 
   const [data, setData] = React.useState<any>([]);
   const [quantity, setQuantity] = React.useState<string>("");
   const [discount, setDiscount] = React.useState<string>("");
+  const [deleteList, setDeleteList] = React.useState<any>([]);
 
   React.useEffect(()=> {
     async function getItems(){
@@ -104,6 +107,50 @@ export default function NewInventory() {
           setDiscount(e.target.value);
       }
 
+
+  const handleSubmit = async (barcode:string, name:string, event?:React.ChangeEvent<HTMLInputElement>) => {
+        console.log(barcode, name)
+        setFlag(false)
+        toast2("Please Wait",{
+            description: "Your Item is being deleted"
+        })
+        if(event) event.preventDefault();
+        try {
+          const response = await fetch('/api/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({barcode: barcode}),
+          });
+          if (response.ok) {
+            console.log('Post request successful');
+            setData(data.filter((item:any)=> item.barcode !== barcode))
+            toast2(`${name} has been deleted`,{
+                description:"Friday, Febraury 10, 2023 at 5:37 PM"
+            })
+            setFlag(true);
+          } else {
+            console.error('Post request failed');
+           toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "There was a problem with your request.",
+            })
+        
+
+          }
+        } catch (error) {
+          console.error('Error occurred while making the post request:', error);
+           toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "There was a problem with your request.",
+            })
+
+
+       }
+      }
 
 
 
@@ -212,51 +259,7 @@ export default function NewInventory() {
           setDiscount(row.getValue('discount'));
       }
 
-      const handleSubmit = async (event:React.ChangeEvent<HTMLInputElement>) => {
-        setFlag(false)
-        toast({
-            title: "Please Wait",
-            description: "Your Item is being deleted"
-        })
-        event.preventDefault();
-        const barcode = String(row.getValue("barcode"));
-        try {
-          const response = await fetch('/api/delete', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({barcode: barcode}),
-          });
-          if (response.ok) {
-            console.log('Post request successful');
-            setData(data.filter((item:any)=> item.barcode !== barcode))
-            toast({
-                title:`${String(row.getValue("name"))} has been deleted`,
-                description:"Friday, Febraury 10, 2023 at 5:37 PM"
-            })
-            setFlag(true);
-          } else {
-            console.error('Post request failed');
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "There was a problem with your request.",
-            })
-
-          }
-        } catch (error) {
-          console.error('Error occurred while making the post request:', error);
-           toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "There was a problem with your request.",
-            })
-
-
-       }
-      }
-
+     
       return (
        
             <Dialog>
@@ -316,7 +319,7 @@ export default function NewInventory() {
                         </Button>
                       </DialogClose>
                       <DialogClose asChild>
-                          {flag ? <Button type="button" onClick={handleSubmit} variant="destructive">Yes</Button>
+                          {flag ? <Button type="button" onClick={(e)=>handleSubmit(row.getValue('barcode'), row.getValue('name'), e) } variant="destructive">Yes</Button>
                           :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
                       </DialogClose>
                     </DialogFooter>
@@ -345,6 +348,18 @@ export default function NewInventory() {
     },
   })
 
+  const handleSelected = (e:React.ChangeEvent<HTMLInputElement>)=> {
+           e.preventDefault();
+           if(table.getRowModel().rows.length != 0){
+            const rows = Object.keys(rowSelection)
+            console.log(rows)
+            console.log(table.getRowModel().rows)
+            rows.map((r:any) => handleSubmit(table.getPaginationRowModel().rowsById[r].original.barcode, table.getPaginationRowModel().rowsById[r].original.name))
+            setRowSelection({})
+            }
+
+
+  }  
 
   return (
     <div className="w-full h-[350px]">
@@ -384,6 +399,7 @@ export default function NewInventory() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <form onSubmit={handleSelected}><Button variant='ghost' type="submit">  Delete Selected Items </Button></form>
       <div className="h-[680px]">
         <Table className="">
           <TableHeader>

@@ -45,7 +45,7 @@ const ManualItem: React.FC<Props> = ({setName, setBarcode, setDescription, setDi
                   </div>
                   <div className="grid gap-3">
                     <Label htmlFor="top-k">Discount</Label>
-                    <Input id="discount" type="number" onChange={(e)=>setDiscount(e.target.value)} placeholder="0.1" />
+                    <Input id="discount"  pattern="^\d+(\.\d{1,2})?$" type="number" onChange={(e)=>setDiscount(e.target.value)} placeholder="0.1" required/>
                   </div>
                   </div>
                   <div className="flex justify-between">

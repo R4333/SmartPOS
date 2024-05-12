@@ -8,6 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet"
 
 import { Separator } from "@/components/ui/separator"
@@ -63,6 +64,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import { Label } from "@/components/ui/label"
+
+
 import { ReloadIcon } from "@radix-ui/react-icons"
 
 import { useRouter } from "next/navigation"
@@ -79,6 +83,8 @@ export default function NewInventory() {
   const {toast} = useToast();
 
   const [data, setData] = React.useState<any>([]);
+  const [quantity, setQuantity] = React.useState<string>("");
+  const [discount, setDiscount] = React.useState<string>("");
 
   React.useEffect(()=> {
     async function getItems(){
@@ -89,10 +95,16 @@ export default function NewInventory() {
     getItems()
   }, [])
 
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [flag, setFlag] = React.useState<boolean>(true);
+
+
+  const handleInput = (e:React.ChangeEvent<HTMLInputElement>)=> {
+          setDiscount(e.target.value);
+      }
+
+
 
 
  const columns: ColumnDef<Payment>[] = [
@@ -145,7 +157,7 @@ export default function NewInventory() {
         </Button>
       )
     },
-    cell: ({ row }) => <div className="ml-3">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="pl-3">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "quantity",
@@ -195,6 +207,11 @@ export default function NewInventory() {
     enableHiding: false,
     cell: ({ row }) => {
 
+      const initValues = () => {
+          setQuantity(row.getValue('quantity'));
+          setDiscount(row.getValue('discount'));
+      }
+
       const handleSubmit = async (event:React.ChangeEvent<HTMLInputElement>) => {
         setFlag(false)
         toast({
@@ -240,7 +257,6 @@ export default function NewInventory() {
        }
       }
 
-
       return (
        
             <Dialog>
@@ -254,16 +270,30 @@ export default function NewInventory() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <Separator />
-                        <Sheet>
-                          <SheetTrigger className="w-full text-start"><Button variant="ghost" className="justify-start text-start p-0 pl-2 w-full text-[0.875rem]">Edit</Button></SheetTrigger>
-                          <SheetContent side='bottom' className="h-[600px]">
+                          <SheetTrigger className="w-full text-start">Edit</SheetTrigger>
+                          <Sheet key={row.getValue('barcode')}>
+                          <SheetContent side='right' className="">
                             <SheetHeader>
-                              <SheetTitle>Are you absolutely sure?</SheetTitle>
+                              <SheetTitle>Edit {row.getValue('name')}</SheetTitle>
                               <SheetDescription>
-                                This action cannot be undone. This will permanently delete your account
-                                and remove your data from our servers.
+                                You can edit individual columns here. 
                               </SheetDescription>
                             </SheetHeader>
+                            <div className="flex flex-col">
+                              <div className="flex flex-col mt-16">
+                                <h1 className="mb-1"> Edit Quantity </h1>
+                                <p className="mb-5 text-sm text-muted-foreground">Please enter the item quantity in decimals</p>
+                                <Input id="quantity" onChange={(e)=>setQuantity(e.target.value)} placeholder={row.getValue('quantity')} className="w-24" />
+                              </div>
+                              <div className="flex flex-col mt-9">
+                                <h1 className="mb-1"> Edit Discount</h1>
+                                <p className="mb-5 text-sm text-muted-foreground">Please enter the discount in float</p>
+                                <Input type="number" pattern="^\d+(\.\d{1,2})?$" id="discount" defaultValue={discount} onChange={handleInput} placeholder={row.getValue('discount')} className="w-24" />
+                              </div>
+                           </div>
+                           <SheetClose asChild>
+                                <Button type="submit">Save changes</Button>
+                           </SheetClose>
                           </SheetContent>
                         </Sheet> 
                     <DropdownMenuItem>
@@ -271,9 +301,9 @@ export default function NewInventory() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogContent className="py-3">
+                    <DialogHeader className="">
+                        <DialogTitle className="mt-2">Are you absolutely sure?</DialogTitle>
                           <DialogDescription className="mt-2">
                             This action cannot be undone. This will permanently delete the item 
                             and remove it from the database.

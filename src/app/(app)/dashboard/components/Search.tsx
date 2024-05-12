@@ -1,7 +1,7 @@
 "use client"
 import {Search} from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useEffect} from "react"
 
 interface SearchBarProps {
 
@@ -11,7 +11,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({onChange}) => {
 const [focus, setFocus] = useState(false)
-const [searchValue, setSearchValue] = useState('');
+
 
 const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -20,6 +20,7 @@ const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   };
 
 return (
+        
           <div className={`relative self-center flex-1 md:grow-0 transition-all duration-300 ${focus ? 'w-6/12' : 'w-5/12'}`}>
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input

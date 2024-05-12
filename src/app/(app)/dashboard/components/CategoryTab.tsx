@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Barcode} from 'lucide-react';
 import Cart from "./Cart"
 
-
 interface SearchProps {
   globalSearchValue?: string;
 }
@@ -23,9 +22,26 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     const [itemObject, setItemObject] = useState<Object>({});
     const [disable, setDisable] = useState<boolean>(false);
 
-    const handleClick = (value: Object)=> {
-       setItemObject(value) 
-    }
+      useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+          if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault()
+            inputRef.current.focus();
+
+          }
+          else if(e.key === "Escape"){
+              e.preventDefault()
+              setBarcode("")
+              inputRef.current.blur();
+          }
+        }
+     
+        document.addEventListener("keydown", down)
+        return () => document.removeEventListener("keydown", down)
+      }, [])
+        const handleClick = (value: Object)=> {
+           setItemObject(value) 
+        }
 
     const disableHandler = (value2?:string)=> { 
        setData(prevData => prevData.map(item => {

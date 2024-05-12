@@ -10,6 +10,7 @@ import {
   ShoppingCart,
   Home,
   UsersRound,
+  PieChart,
 } from "lucide-react"
 import { handleClientScriptLoad } from "next/script";
 export default function NewSideBarItems(){
@@ -32,6 +33,22 @@ return(
             <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
             <span className="sr-only">Acme Inc</span>
           </Link>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ${path === "dashboard" ? " bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+              onClick={()=> {
+                  setPath("analytics")
+                  handleClick("analytics")
+              }
+                    
+                  }>
+                <PieChart className="h-5 w-5" />
+                <span className="sr-only">Analytics</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">Analytics</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <div

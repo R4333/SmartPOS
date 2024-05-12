@@ -63,7 +63,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import {
+    Trash2,
+} from "lucide-react"
 import { Label } from "@/components/ui/label"
 
 
@@ -405,7 +407,7 @@ export default function NewInventory() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <form onSubmit={handleSelected}><Button variant='ghost' type="submit">  Delete Selected Items </Button></form>
+      <form onSubmit={handleSelected}><Button variant='ghost' type="submit" size="icon" className="ml-1"> <Trash2 className="h-4 w-4"/></Button></form>
       <div className="h-[680px]">
         <Table className="">
           <TableHeader>

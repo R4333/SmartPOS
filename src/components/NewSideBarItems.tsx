@@ -9,9 +9,9 @@ import {
   Settings,
   ShoppingCart,
   Home,
+  UsersRound,
 } from "lucide-react"
 import { handleClientScriptLoad } from "next/script";
-
 export default function NewSideBarItems(){
 
 const currentPath = usePathname();
@@ -76,6 +76,22 @@ return(
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">Account</TooltipContent>
+          </Tooltip>
+           <Tooltip>
+            <TooltipTrigger asChild>
+              <div
+                className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ${path === "dashboard" ? " bg-secondary text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+              onClick={()=> {
+                  setPath("users")
+                  handleClick("users")
+              }
+                    
+                  }>
+                <UsersRound className="h-5 w-5" />
+                <span className="sr-only">Manage Users</span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">Manage Users</TooltipContent>
           </Tooltip>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

@@ -79,25 +79,27 @@ export default function AddItem() {
             formData.append('tags', category);
             formData.append('quantity', quantity)
             formData.append('isAvailable', "true");
+
             await createItem(1, formData).then((t)=>{
                  if(t.success != undefined){
-                 router.refresh()
-                 toast({
-                    title: `${name} have been added`,
-                    description: "Friday, February 10, 2023 at 5:57 PM",
-            })
+                    router.refresh()
+                    toast({
+                        title: `${name} have been added`,
+                        description: "Friday, February 10, 2023 at 5:57 PM",
+                    })
+
                  }else{
 
-                 toast({
-                    variant: "destructive",
-                    title: `Failed to add ${name}`,
-                    description: "Check logs for more info",
-            })
+                    toast({
+                        variant: "destructive",
+                        title: `Failed to add ${name}`,
+                        description: "Check logs for more info",
+                    })
 
                  }
 
 
-        })
+            })
     }
 
         else {csvData.map(async (d:any,i:any) => {

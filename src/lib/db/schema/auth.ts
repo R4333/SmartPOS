@@ -8,7 +8,7 @@ export const users = pgTable("user", {
   email: text("email").notNull().unique(),
   hashedPassword: text("hashed_password").notNull(),
   name: text("name"),
-  role: roleEnums("role").notNull().default("admin"),
+  role: roleEnums("role").notNull().default("user"),
 });
 
 export const sessions = pgTable("session", {
@@ -28,6 +28,7 @@ export const authenticationSchema = z.object({
     .string()
     .min(4, { message: "must be at least 4 characters long" })
     .max(15, { message: "cannot be more than 15 characters long" }),
+  name: z.string(),
 });
 
 export const updateUserSchema = z.object({

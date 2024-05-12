@@ -81,10 +81,10 @@ export async function signUpAction(
     return genericError;
   }
 
-  const session = await lucia.createSession(userId, {});
+  /* const session = await lucia.createSession(userId, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
-  setAuthCookie(sessionCookie);
-  return redirect("/dashboard");
+  setAuthCookie(sessionCookie); */
+  return redirect("/users");
 }
 
 export async function signOutAction(): Promise<ActionResult> {

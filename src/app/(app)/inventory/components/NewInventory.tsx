@@ -30,11 +30,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
 import {
   Dialog,
@@ -70,6 +65,7 @@ import {
 } from "@/components/ui/table"
 import {
     Trash2,
+    Anvil,
 } from "lucide-react"
 import { Label } from "@/components/ui/label"
 
@@ -94,6 +90,7 @@ export default function NewInventory() {
   const [data, setData] = React.useState<any>([]);
   const [quantity, setQuantity] = React.useState<string>("");
   const [discount, setDiscount] = React.useState<string>("");
+  const [price, setPrice] = React.useState<string>("");
   const [deleteList, setDeleteList] = React.useState<any>([]);
 
   React.useEffect(()=> {
@@ -273,63 +270,48 @@ export default function NewInventory() {
 
      
       return (
-       
+        <div className="flex justify-around">
             <Dialog>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost" className="h-8 w-8 p-0">
-                      <DotsHorizontalIcon className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Separator />
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button className="justify-start m-0 pl-2 text-start w-full" variant="ghost">Edit</Button>
-                              </PopoverTrigger>
-                              <PopoverContent className="w-80">
-                                <div className="grid gap-4">
-                                  <div className="space-y-2">
-                                    <p className="text-sm text-muted-foreground">
-                                      Edit Columns
-                                    </p>
+              <DialogTrigger className="h-5 w-5"><Anvil className="h-5 w-5"/></DialogTrigger>
+                <DialogContent className="py-3">
+                    <DialogHeader className="">
+                        <DialogTitle className="mt-2">Edit Columns</DialogTitle>
+                    </DialogHeader>
+                            <form className="grid w-[500px] h-[300px] items-start gap-6 overflow-auto  pt-0">
+                                <fieldset className="grid gap-4 rounded-lg border p-4">
+                                  <legend className="-ml-1 px-1 text-sm font-medium">
+                                    Item
+                                  </legend>
+                                  <div className="grid gap-3">
+                                    <Label htmlFor="top-k">Discount</Label>
+                                    <Input id="discount"  pattern="^\d+(\.\d{1,2})?$" type="number" onChange={(e)=>setDiscount(e.target.value)} placeholder="0.1" required/>
                                   </div>
-                                  <div className="grid gap-2">
-                                    <div className="grid grid-cols-3 items-center gap-4">
-                                      <Label htmlFor="width">Price</Label>
-                                      <Input
-                                        id="price"
-                                        defaultValue={row.getValue('price')}
-                                        className="col-span-2 h-8"
-                                      />
-                                    </div>
-                                    <div className="grid grid-cols-3 items-center gap-4">
-                                      <Label htmlFor="maxWidth">Quantity</Label>
-                                      <Input
-                                        id="quantity"
-                                        defaultValue={row.getValue('quantity')}
-                                        className="col-span-2 h-8"
-                                      />
-                                    </div>
-                                    <div className="grid grid-cols-3 items-center gap-4">
-                                      <Label htmlFor="height">Discount</Label>
-                                      <Input
-                                        id="discount"
-                                        defaultValue={row.getValue('discount')}
-                                        className="col-span-2 h-8"
-                                      />
-                                    </div>
+                                  <div className="grid gap-3">
+                                    <Label htmlFor="top-p">Price</Label>
+                                    <Input id="price" type="number" onChange={(e)=>setPrice(e.target.value)} placeholder="0.7" />
                                   </div>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
-                        <DropdownMenuItem>
-                        <DialogTrigger>Delete</DialogTrigger>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                                  <div className="grid gap-3">
+                                    <Label htmlFor="top-k">Quantity</Label>
+                                    <Input id="quantity" type="number" onChange={(e)=>setQuantity(e.target.value)} placeholder="20" />
+                                  </div>
+                                </fieldset>
+                              </form>
+                    <DialogFooter className="sm:justify-end">
+                      <DialogClose asChild>
+                        <Button type="button" variant="outline">
+                         Close 
+                        </Button>
+                      </DialogClose>
+                      <DialogClose asChild>
+                          {flag ? <Button type="button" onClick={(e)=>handleSubmit(row.getValue('barcode'), row.getValue('name'), e) } variant="outline">Submit</Button>
+                          :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
+                      </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger className="h-5 w-5"><Trash2 className="h-5 w-5"/></DialogTrigger>
                 <DialogContent className="py-3">
                     <DialogHeader className="">
                         <DialogTitle className="mt-2">Are you absolutely sure?</DialogTitle>
@@ -351,6 +333,7 @@ export default function NewInventory() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            </div>
       )
     },
   },

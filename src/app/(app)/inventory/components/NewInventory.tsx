@@ -30,6 +30,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 import {
   Dialog,
@@ -155,6 +160,10 @@ export default function NewInventory() {
        }
       }
 
+      const formHandler = ()=> {
+          console.log("hi");
+      }
+
 
 
  const columns: ColumnDef<Payment>[] = [
@@ -276,33 +285,47 @@ export default function NewInventory() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <Separator />
-                          <SheetTrigger className="w-full text-start">Edit</SheetTrigger>
-                          <Sheet key={row.getValue('barcode')}>
-                          <SheetContent side='right' className="">
-                            <SheetHeader>
-                              <SheetTitle>Edit {row.getValue('name')}</SheetTitle>
-                              <SheetDescription>
-                                You can edit individual columns here. 
-                              </SheetDescription>
-                            </SheetHeader>
-                            <div className="flex flex-col">
-                              <div className="flex flex-col mt-16">
-                                <h1 className="mb-1"> Edit Quantity </h1>
-                                <p className="mb-5 text-sm text-muted-foreground">Please enter the item quantity in decimals</p>
-                                <Input id="quantity" onChange={(e)=>setQuantity(e.target.value)} placeholder={row.getValue('quantity')} className="w-24" />
-                              </div>
-                              <div className="flex flex-col mt-9">
-                                <h1 className="mb-1"> Edit Discount</h1>
-                                <p className="mb-5 text-sm text-muted-foreground">Please enter the discount in float</p>
-                                <Input type="number" pattern="^\d+(\.\d{1,2})?$" id="discount" defaultValue={discount} onChange={handleInput} placeholder={row.getValue('discount')} className="w-24" />
-                              </div>
-                           </div>
-                           <SheetClose asChild>
-                                <Button type="submit">Save changes</Button>
-                           </SheetClose>
-                          </SheetContent>
-                        </Sheet> 
-                    <DropdownMenuItem>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button className="justify-start m-0 pl-2 text-start w-full" variant="ghost">Edit</Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80">
+                                <div className="grid gap-4">
+                                  <div className="space-y-2">
+                                    <p className="text-sm text-muted-foreground">
+                                      Edit Columns
+                                    </p>
+                                  </div>
+                                  <div className="grid gap-2">
+                                    <div className="grid grid-cols-3 items-center gap-4">
+                                      <Label htmlFor="width">Price</Label>
+                                      <Input
+                                        id="price"
+                                        defaultValue={row.getValue('price')}
+                                        className="col-span-2 h-8"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-3 items-center gap-4">
+                                      <Label htmlFor="maxWidth">Quantity</Label>
+                                      <Input
+                                        id="quantity"
+                                        defaultValue={row.getValue('quantity')}
+                                        className="col-span-2 h-8"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-3 items-center gap-4">
+                                      <Label htmlFor="height">Discount</Label>
+                                      <Input
+                                        id="discount"
+                                        defaultValue={row.getValue('discount')}
+                                        className="col-span-2 h-8"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </PopoverContent>
+                            </Popover>
+                        <DropdownMenuItem>
                         <DialogTrigger>Delete</DialogTrigger>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -407,7 +430,7 @@ export default function NewInventory() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <form onSubmit={handleSelected}><Button variant='ghost' type="submit" size="icon" className="ml-1"> <Trash2 className="h-4 w-4"/></Button></form>
+      <form onSubmit={handleSelected}><Button variant='ghost' type="submit" size="icon" className="ml-1"> <Trash2 className="h-4 w-4 text-red-500"/></Button></form>
       <div className="h-[680px]">
         <Table className="">
           <TableHeader>

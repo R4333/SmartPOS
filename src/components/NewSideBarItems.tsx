@@ -13,6 +13,8 @@ import {
   PieChart,
 } from "lucide-react"
 import { handleClientScriptLoad } from "next/script";
+import SignOutBtn from "@/components/auth/SignOutBtn";
+
 export default function NewSideBarItems(){
 
 const currentPath = usePathname();
@@ -112,6 +114,7 @@ return(
           </Tooltip>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+        <SignOutBtn/>
           <Tooltip>
             <TooltipTrigger asChild>
               <Link

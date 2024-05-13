@@ -124,7 +124,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
         const total = (subTotal(items, quantity) -  calDiscount(discount))
         const formData = new FormData();
         formData.append('total', total.toString())
-        await createSale(formData, items).then((t)=> {
+        await createSale(formData, items, quantity).then((t)=> {
             console.log(t)
             setDiscount({});
             items.map(item => setHandler && setHandler(item.barcode))
@@ -136,10 +136,6 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
             })
             setFlag(true);
         })
-
-       
-
-
 
     }
 

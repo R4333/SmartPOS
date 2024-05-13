@@ -253,6 +253,7 @@ export async function createItem(
 export async function createSale(
   formData: FormData,
   items?: any,
+  quantity?: any,
 ): Promise<ActionResult & { success?: boolean }> {
   const { session } = await getUserAuth();
   if (!session) return { error: "Unauthorised" };
@@ -291,7 +292,7 @@ export async function createSale(
     
     await db.insert(saleTable).values(newUser);
     items.map(async (i:any)=>{
-        await db.update(itemTable).set({quantity: sql`${itemTable.quantity} - 1`,}).where(eq(itemTable.barcode, i.barcode))
+        await db.update(itemTable).set({quantity: sql`${itemTable.quantity} - ${quantity[i.barcode]}`,}).where(eq(itemTable.barcode, i.barcode))
         const sale_item: SaleItem = {
             saleId:saleVals.id,
             itemId: i.barcode,

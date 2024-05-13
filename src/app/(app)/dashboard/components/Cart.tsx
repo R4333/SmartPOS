@@ -84,11 +84,14 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
     },[])
 
     const handleIncrement= (event:React.ChangeEvent<HTMLInputElement>) => {
-       const key = event.target.getAttribute('data-custom')
-       console.log(event.target)
-        const newObject = {...quantity};
-        newObject[key] += 1.00;
-        setQuantity(newObject)
+
+       const key = JSON.parse(event.currentTarget.getAttribute('data-custom'))
+       const newObject = {...quantity};
+        if(newObject[key.barcode] < key.quantity){
+            newObject[key.barcode] += 1.00;
+            setQuantity(newObject)
+        }
+        
     }
 
     const handleClear = () => {
@@ -99,7 +102,8 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
     }
 
     const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
-       const barcode = event.target.getAttribute('data-custom')
+       const barcode = event.currentTarget.getAttribute('data-custom')
+       console.log(barcode)
        if(quantity[barcode] == 1) {
 
        const newObject = {...quantity};
@@ -189,11 +193,11 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
                                   <span className="text-muted-foreground w-36 text-wrap">{t != null ? t.name: " "}</span>
                                   <div className="absolute left-40">
-                                  <Button variant="outline" className="h-6 w-6 p-0 m-0 ml-4" datacustom={t.barcode} onClick={handleDecrement}>
+                                  <Button variant="outline" className="h-6 w-6 p-0 m-0 ml-4" data-custom={t.barcode} onClick={handleDecrement}>
                                   <Minus className="h-4 w-4"  data-custom={t.barcode}/>
                                   </Button>
                                   <span className="absolute left-9 top-1 ml-4">{quantity[t.barcode]}</span>
-                                  <Button variant="outline" className="h-6 w-6 p-0 m-0 ml-8" data-custom={t.barcode} onClick={handleIncrement}>
+                                  <Button variant="outline" className="h-6 w-6 p-0 m-0 ml-8" data-custom={JSON.stringify({barcode: t.barcode, quantity: t.quantity})} onClick={handleIncrement}>
                                   <Plus className="h-4 w-4" data-custom={t.barcode} />
                                   </Button>
                                   </div>

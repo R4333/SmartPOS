@@ -53,6 +53,7 @@ import { useEffect, useState } from "react"
 export default function Dashboard() {
 
   const [data, setData] = useState<object[]>([]);
+  const [data2, setData2] = useState<object[]>([]);
 
   useEffect(()=>{
 
@@ -62,7 +63,15 @@ export default function Dashboard() {
         setData(data['product'])
         console.log(data['product'])
     }
+
+    async function getItems2(){
+        const response2 = await fetch('/api/saleitem', {cache: 'no-store'})
+        const data2 = await response2.json();
+        setData2(data2['product'])
+        console.log(data2['product'])
+    }
     getItems()
+    getItems2()
 
   },[])
 
@@ -197,83 +206,29 @@ export default function Dashboard() {
           <Card  x-chunk="dashboard-01-chunk-5">
             <CardHeader>
               <CardTitle className="mb-6">Recent Sales</CardTitle>
+                 <CardDescription className="mb-9">
+                  All the recent sales from your store.
+                </CardDescription>
+
             </CardHeader>
             <CardContent className="grid gap-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                  <AvatarFallback>OM</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Olivia Martin
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    olivia.martin@email.com
-                  </p>
+               { 
+                data2.map((d:any) => {
+                    return (
+              <div key={d.sale.id} className="flex items-center gap-4">
+                        <div className="grid gap-1">
+                            <p className="text-sm font-medium leading-none">
+                                {d.sale.id}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                            {JSON.stringify(d['sale_item'])}
+                            </p>
+                        </div>
+                        <div className="ml-auto font-medium">${d.sale.total}</div>
                 </div>
-                <div className="ml-auto font-medium">+$1,999.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Jackson Lee
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    jackson.lee@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
-                  <AvatarFallback>IN</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Isabella Nguyen
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    isabella.nguyen@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$299.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                  <AvatarFallback>WK</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    William Kim
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    will@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$99.00</div>
-              </div>
-              <div className="flex items-center gap-4">
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
-                  <AvatarFallback>SD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    Sofia Davis
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    sofia.davis@email.com
-                  </p>
-                </div>
-                <div className="ml-auto font-medium">+$39.00</div>
-              </div>
+                    )
+                })
+               }
             </CardContent>
           </Card>
         </div>

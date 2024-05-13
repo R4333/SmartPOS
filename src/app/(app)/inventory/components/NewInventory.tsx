@@ -184,7 +184,7 @@ export default function NewInventory() {
     accessorKey: "isAvailable",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("isAvailable") ? "Available" : "Not Available"}</div>
+      <div className="capitalize">{row.getValue("quantity") != 0 ? "Available" : "Not Available"}</div>
     ),
   },
   {

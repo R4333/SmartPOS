@@ -251,8 +251,8 @@ export async function createItem(
 //create sale
 
 export async function createSale(
-  _: any,
-  formData: FormData
+  formData: FormData,
+  items?: any,
 ): Promise<ActionResult & { success?: boolean }> {
   const { session } = await getUserAuth();
   if (!session) return { error: "Unauthorised" };
@@ -266,22 +266,17 @@ export async function createSale(
     total,
   });
 
-  console.log("after result")
   if (!result.success) {
-    console.log(result)
     const error = result.error.flatten().fieldErrors;
-    console.log(error)
     if (error.total) return { error: "Invalid total - " + error.total[0] };
     return genericError;
   }
 
-  console.log("After error checking in result")
   const saleVals: Sale = {
     id: generateId(15),
     userId: result.data.userId,
     total: result.data.total,
   };
-  console.log("After saleVals")
 
   try {
 
@@ -291,8 +286,20 @@ export async function createSale(
       userId: saleVals.userId,
       total: String(saleVals.total),
     }
+
+    type SaleItem= typeof saleItemTable.$inferInsert;
+    
     await db.insert(saleTable).values(newUser);
-    console.log("wargye")
+    items.map(async (i:any)=>{
+        await db.update(itemTable).set({quantity: sql`${itemTable.quantity} - 1`,}).where(eq(itemTable.barcode, i.barcode))
+        const sale_item: SaleItem = {
+            saleId:saleVals.id,
+            itemId: i.barcode,
+        }
+        await db.insert(saleItemTable).values(sale_item);
+
+    });
+
     return { success: true, error: "" };
   } catch (e) {
     console.log(e)

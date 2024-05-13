@@ -85,6 +85,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
 
     const handleIncrement= (event:React.ChangeEvent<HTMLInputElement>) => {
        const key = event.target.getAttribute('data-custom')
+       console.log(event.target)
         const newObject = {...quantity};
         newObject[key] += 1.00;
         setQuantity(newObject)
@@ -123,7 +124,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
         const total = (subTotal(items, quantity) -  calDiscount(discount))
         const formData = new FormData();
         formData.append('total', total.toString())
-        await createSale(0, formData).then((t)=> {
+        await createSale(formData, items).then((t)=> {
             console.log(t)
             setDiscount({});
             items.map(item => setHandler && setHandler(item.barcode))
@@ -197,7 +198,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                                   </Button>
                                   <span className="absolute left-9 top-1 ml-4">{quantity[t.barcode]}</span>
                                   <Button variant="outline" className="h-6 w-6 p-0 m-0 ml-8" data-custom={t.barcode} onClick={handleIncrement}>
-                                  <Plus className="h-4 w-4" />
+                                  <Plus className="h-4 w-4" data-custom={t.barcode} />
                                   </Button>
                                   </div>
                                   <span className="ml-30">{`$${t != null ? (quantity[t.barcode]*t.price).toFixed(2) : " "}`}</span>

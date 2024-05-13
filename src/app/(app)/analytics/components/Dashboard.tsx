@@ -162,15 +162,15 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[10px]">Sale ID</TableHead> 
+                    <TableHead>Sale ID</TableHead> 
                     <TableHead className="pl-20">
                       Date
                     </TableHead>
                     <TableHead className="text-right">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
-                <ScrollArea className="w-full">
                 <TableBody className="">
+
                   {
                       data.map((d:any) => {
                           return (
@@ -190,9 +190,7 @@ export default function Dashboard() {
                           )
                       })
                   }
-
                </TableBody>
-            </ScrollArea>
               </Table>
             </CardContent>
           </Card>

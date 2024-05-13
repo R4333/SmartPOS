@@ -69,7 +69,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
         event.preventDefault();
         setBarcode(event.target.value)
         console.log(barcode)
-        const selectedItem = items.filter((item:any) => item.props.barcode === barcode);
+        const selectedItem = items.filter((item:any) => item.props.barcode.toLowerCase() == barcode.toLowerCase());
         console.log(selectedItem)
         if(selectedItem[0] != undefined){
             if(selectedItem[0].props.disable != true){

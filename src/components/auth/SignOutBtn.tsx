@@ -16,8 +16,8 @@ export default function SignOutBtn() {
 const Btn = () => {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size='icon' variant="ghost" disabled={pending} >
-        <DoorClosed color="#850000" />
+    <Button type="submit" size='icon' className="ml-1 h-8 w-8" variant="destructive" disabled={pending} >
+        <DoorClosed color="white"/>
     </Button>
   );
 };

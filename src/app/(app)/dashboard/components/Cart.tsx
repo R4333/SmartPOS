@@ -17,17 +17,19 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import {
   Copy,
-  CreditCard,
   Plus,
   Minus,
-  Ban
 } from "lucide-react"
+
+import { ReloadIcon } from "@radix-ui/react-icons"
+
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 import { generateKey } from "crypto"
 import { useEffect, useState } from "react"
 import { disconnect } from "process"
 import {createSale} from '@/lib/actions/pos'
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props{
     itemInfo?: Object;
@@ -71,6 +73,8 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
     const [quantity, setQuantity] = useState<Object>({});
     const [discount, setDiscount] = useState<Object>({}); 
     const [value, setValue] = useState("")
+    const [flag, setFlag] = useState(true)
+    const {toast} = useToast();
 
     const currentDateTime = new Date();
 
@@ -114,12 +118,27 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
     }
 
     const handleSubmit = async (e:React.ChangeEvent<HTMLInputElement>) => {
-
+        setFlag(false)
         e.preventDefault()
         const total = (subTotal(items, quantity) -  calDiscount(discount))
         const formData = new FormData();
         formData.append('total', total.toString())
-        await createSale(0, formData).then((t)=> console.log(t))
+        await createSale(0, formData).then((t)=> {
+            console.log(t)
+            setDiscount({});
+            items.map(item => setHandler && setHandler(item.barcode))
+            setItems([]);
+            setQuantity({});
+            toast({
+                title: "Order completed successfully",
+                description: "check logs for more info"
+            })
+            setFlag(true);
+        })
+
+       
+
+
 
     }
 
@@ -237,7 +256,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                   </ul>
                 </div>
               <Separator className="my-5" />
-              <form className="flex justify-center" onSubmit={handleSubmit}><Button variant="outline">Process</Button></form>
+              <form className="flex justify-center" onSubmit={handleSubmit}>{flag ? <Button variant="outline">Process</Button>:<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}</form>
               </CardContent>
               <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                 <div className="text-xs text-muted-foreground">

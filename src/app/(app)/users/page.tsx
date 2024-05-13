@@ -19,8 +19,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-
+} from "@/components/ui/select";
 
 export default function SignUpPage() {
   const [state, formAction] = useFormState(signUpAction, {
@@ -33,9 +32,9 @@ export default function SignUpPage() {
       <AuthFormError state={state} />
       <form action={formAction}>
         <Label htmlFor="name" className="text-muted-foreground">
-         Name 
+          Name
         </Label>
-        <Input name="name" pattern= "[a-zA-Z]+" type="text" id="name" required />
+        <Input name="name" type="text" id="name" required />
         <br />
         <Label htmlFor="email" className="text-muted-foreground">
           Email
@@ -48,24 +47,24 @@ export default function SignUpPage() {
         <Input type="password" name="password" id="password" required />
         <br />
         <Label htmlFor="role" className="text-muted-foreground">
-         Role 
+          Role
         </Label>
         <Select>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a role" />
-            </SelectTrigger>
-        <SelectContent>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select a role" />
+          </SelectTrigger>
+          <SelectContent>
             <SelectGroup>
-                <SelectLabel>Role</SelectLabel>
-                    <SelectItem value="user">User</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
+              <SelectLabel>Role</SelectLabel>
+              <SelectItem value="user">User</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
             </SelectGroup>
-        </SelectContent>
+          </SelectContent>
         </Select>
         <br />
-      <SubmitButton />
+        <SubmitButton />
       </form>
-   </main>
+    </main>
   );
 }
 

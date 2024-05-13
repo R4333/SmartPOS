@@ -68,17 +68,32 @@ export async function signUpAction(
 
   if (error !== null) return { error };
 
+  // add role to data from formdata
+  data.role = formData.get("role") as string;
+
+  //add name to data from formdata
+  data.name = formData.get("name") as string;
+
+  //set data.role to user if it is null or undefined
+  if (!data.role) {
+    data.role = "user";
+  }
+
+  console.log(formData);
+
   const hashedPassword = await new Argon2id().hash(data.password);
   const userId = generateId(15);
 
   try {
     await db.insert(users).values({
       id: userId,
+      name: data.name,
       email: data.email,
-      hashedPassword,
+      hashedPassword: hashedPassword,
+      role: data.role,
     });
   } catch (e) {
-    return genericError;
+    return { error: "problem in user.ts." };
   }
 
   /* const session = await lucia.createSession(userId, {});

@@ -54,12 +54,13 @@ export const validateAuthFormData = (
   formData: FormData
 ):
   | { data: UsernameAndPassword; error: null }
+  | any
   | { data: null; error: string } => {
   const email = formData.get("email");
   const password = formData.get("password");
   const name = formData.get("name");
   const role = formData.get("role");
-  console.log(name, role)
+  console.log(name, role);
   const result = authenticationSchema.safeParse({ email, password, name });
 
   if (!result.success) {

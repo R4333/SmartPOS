@@ -46,7 +46,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     const disableHandler = (value2?:string)=> { 
        setData(prevData => prevData.map(item => {
             if (item.key === value2) {
-                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} quantity={item.props.quantity} discount= {item.props.discount} price={item.props.price} category={item.props.category} quantity={item.props.quantity} onChange={handleClick} disable={true} setDisable={disableHandler}/>
+                return <ItemCard key={item.props.barcode} name={item.props.name} barcode={item.props.barcode} quantity={item.props.quantity} discount= {item.props.discount} price={item.props.price} category={item.props.category} onChange={handleClick} disable={true} setDisable={disableHandler}/>
             }
             return item;
 

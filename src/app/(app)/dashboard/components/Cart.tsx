@@ -189,6 +189,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                   <ul className="grid gap-3 mt-3">
                      {itemInfo.price !== undefined ?
                          items.map((t:any, i:any) => { 
+                            if(t.quantity != 0){
                                 return (<li className="relative flex justify-between" key={t.barcode}>
 
                                   <span className="text-muted-foreground w-36 text-wrap">{t != null ? t.name: " "}</span>
@@ -203,6 +204,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                                   </div>
                                   <span className="ml-30">{`$${t != null ? (quantity[t.barcode]*t.price).toFixed(2) : " "}`}</span>
                                 </li>)
+                                }
                          }) : null
                      }
                   </ul>

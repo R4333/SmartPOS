@@ -3,23 +3,11 @@
 import Link from "next/link"
 import {
   Activity,
-  ArrowUpRight,
-  CircleUser,
   CreditCard,
   DollarSign,
-  Menu,
-  Package2,
-  Search,
   Users,
 } from "lucide-react"
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -27,16 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+
 import {
   Table,
   TableBody,
@@ -47,6 +26,13 @@ import {
 } from "@/components/ui/table"
 
 import { ScrollArea } from "@/components/ui/scroll-area"
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 import { useEffect, useState } from "react"
 
@@ -61,15 +47,30 @@ export default function Dashboard() {
         const response = await fetch('/api/sales', {cache: 'no-store'})
         const data = await response.json();
         setData(data['product'])
-        console.log(data['product'])
     }
 
     async function getItems2(){
         const response2 = await fetch('/api/saleitem', {cache: 'no-store'})
-        const data2 = await response2.json();
-        setData2(data2['product'])
-        console.log(data2['product'])
+        const d2 = await response2.json();
+        const combinedSales: any[]= []
+        d2['product'].forEach((sale:any) => {
+
+            const existingSale = combinedSales.find(item => item.saleId === sale.saleId);
+
+            if (!existingSale) {
+                combinedSales.push({
+                    saleId: sale.saleId,
+                    total: sale.total,
+                    items: [sale.itemName]
+                });
+            } else {
+                existingSale.items.push(sale.itemName);
+            }
+        });
+
+        setData2(combinedSales)
     }
+
     getItems()
     getItems2()
 
@@ -212,23 +213,29 @@ export default function Dashboard() {
 
             </CardHeader>
             <CardContent className="grid gap-8">
+            <Accordion type="single" collapsible className="w-full">
                { 
-                data2.map((d:any) => {
-                    return (
-              <div key={d.sale.id + d.sale.updatedAt} className="flex items-center gap-4">
-                        <div className="grid gap-1">
-                            <p className="text-sm font-medium leading-none">
-                                {d.sale.id}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                            {JSON.stringify(d['sale_item'])}
-                            </p>
-                        </div>
-                        <div className="ml-auto font-medium">${d.sale.total}</div>
-                </div>
-                    )
-                })
-               }
+                    data2.map((d:any, i:any) => {
+                        return (
+                                  <div key={d.saleId} className="flex justify-between">
+                                  <AccordionItem className="border-0" value={d.saleId}>
+                                    <AccordionTrigger># {d.saleId}</AccordionTrigger>
+                                    <AccordionContent>
+                                     {
+                                        d["items"].map((i:any) => {
+                                            return(
+                                                <p key={i} className="text-sm text-muted-foreground">{i}</p>
+                                            )
+                                        })
+                                    } 
+                                    </AccordionContent>
+                                  </AccordionItem>
+                                  <div className="mt-5 font-medium">${d.total}</div>
+                                  </div>
+                        )
+                    })
+              }
+             </Accordion>
             </CardContent>
           </Card>
         </div>

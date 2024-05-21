@@ -159,7 +159,7 @@ export default function Dashboard() {
           </Card>
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+          <Card className="h-[900px] xl:col-span-2 flex flex-col" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Sales</CardTitle>
@@ -168,7 +168,8 @@ export default function Dashboard() {
                 </CardDescription>
               </div>
             </CardHeader>
-            <CardContent>
+            <ScrollArea>
+            <CardContent className="">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -203,8 +204,9 @@ export default function Dashboard() {
                </TableBody>
               </Table>
             </CardContent>
+            </ScrollArea>
           </Card>
-          <Card  x-chunk="dashboard-01-chunk-5">
+          <Card  x-chunk="dashboard-01-chunk-5" className="h-[700px] overflow-y-hidden">
             <CardHeader>
               <CardTitle className="mb-6">Recent Sales</CardTitle>
                  <CardDescription className="mb-9">
@@ -224,7 +226,7 @@ export default function Dashboard() {
                                      {
                                         d["items"].map((i:any) => {
                                             return(
-                                                <p key={i} className="text-sm text-muted-foreground">{i}</p>
+                                                <p key={i} className="text-sm text-muted-foreground">{`${i}      x 1`}</p>
                                             )
                                         })
                                     } 

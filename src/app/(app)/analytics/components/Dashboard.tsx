@@ -215,7 +215,7 @@ export default function Dashboard() {
                { 
                 data2.map((d:any) => {
                     return (
-              <div key={d.sale.id} className="flex items-center gap-4">
+              <div key={d.sale.id + d.sale.updatedAt} className="flex items-center gap-4">
                         <div className="grid gap-1">
                             <p className="text-sm font-medium leading-none">
                                 {d.sale.id}

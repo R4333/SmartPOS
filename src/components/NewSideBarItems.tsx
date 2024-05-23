@@ -3,6 +3,7 @@ import Link from "next/link"
 import {Tooltip,TooltipContent,TooltipTrigger,TooltipProvider} from "@/components/ui/tooltip"
 import { useState } from "react"
 import { usePathname, useRouter } from 'next/navigation'
+import { AuthSession, getUserAuth } from "@/lib/auth/utils";
 import {
   Package,
   Package2,
@@ -15,13 +16,14 @@ import {
 import { handleClientScriptLoad } from "next/script";
 import SignOutBtn from "@/components/auth/SignOutBtn";
 
-export default function NewSideBarItems(){
+const NewSideBarItems = ({ session }: { session: AuthSession }) => {
 
 const currentPath = usePathname();
 const [path, setPath] = useState(`${currentPath.split("/")[1]}`);
 const router = useRouter();
 const handleClick = (route:string)=> {
     console.log(`Handling ${route}`)
+    console.log(session.session.user.role)
     router.push(`/${route}`);
 }
 return(
@@ -35,7 +37,7 @@ return(
             <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
             <span className="sr-only">Acme Inc</span>
           </Link>
-          <Tooltip>
+          {session.session.user.role === "admin" ? <Tooltip>
             <TooltipTrigger asChild>
               <div
                 className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ${path === "analytics" ? " bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
@@ -50,7 +52,7 @@ return(
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">Analytics</TooltipContent>
-          </Tooltip>
+          </Tooltip> : null}
           <Tooltip>
             <TooltipTrigger asChild>
               <div
@@ -67,7 +69,7 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Dashboard</TooltipContent>
           </Tooltip>
-          <Tooltip>
+          {session.session.user.role === "admin" ? <Tooltip>
             <TooltipTrigger asChild>
               <div
                 className={`flex h-9 w-9  cursor-pointer items-center justify-center rounded-lg ${path === "inventory" ? "bg-accent text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
@@ -80,7 +82,7 @@ return(
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">Inventory</TooltipContent>
-          </Tooltip>
+          </Tooltip> : null}
           <Tooltip>
             <TooltipTrigger asChild>
               <div
@@ -96,7 +98,7 @@ return(
             </TooltipTrigger>
             <TooltipContent side="right">Account</TooltipContent>
           </Tooltip>
-           <Tooltip>
+          {session.session.user.role === "admin" ? <Tooltip>
             <TooltipTrigger asChild>
               <div
                 className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ${path === "users" ? " bg-users text-accent-foreground" : "text-muted-foreground"} transition-colors hover:text-foreground md:h-8 md:w-8`}
@@ -111,7 +113,7 @@ return(
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">Manage Users</TooltipContent>
-          </Tooltip>
+          </Tooltip> : null}
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
           <Tooltip>
@@ -133,3 +135,5 @@ return(
 
     )
 }
+
+export default NewSideBarItems;

@@ -342,13 +342,13 @@ export async function updateItem(
   const prePrice = formData.get("price") as string;
 
   // if value null or undefined then set to value from the db.
-  const price = parseInt(prePrice) ?? result.price;
+  const price = prePrice !== "" ? (prePrice) : result.price;
 
   const preQuant = formData.get("quantity") as string;
-  const quantity = parseInt(preQuant) ?? result.quantity;
+  const quantity = preQuant !== "" ?  parseInt(preQuant) : result.quantity;
 
   const preDiscount = formData.get("discount") as string;
-  const discount = parseFloat(preDiscount) ?? result.discount;
+  const discount = preDiscount !== "" ? parseFloat(preDiscount) : result.discount;
 
   const itemvals: ItemUpdate = {
     price: price, // Convert price to string

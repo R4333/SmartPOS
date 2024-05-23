@@ -22,6 +22,24 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
     const [itemObject, setItemObject] = useState<Object>({});
     const [disable, setDisable] = useState<boolean>(false);
 
+        async function getItems(){
+            const response = await fetch('/api/inventory', {cache: 'no-store'})
+            const data = await response.json();
+            const newItemsArray:any[] = [];
+            const newArray:any[] = ["all"];
+            data['product'].map((t:any,i:any) => {
+                (() => {
+                    if (newArray.length === 0 || !newArray.includes(t.tags[0])) {
+                        newArray.push(t.tags[0])
+                    }
+                })()
+                newItemsArray.push(<ItemCard key={t.barcode} name={t.name} barcode={t.barcode} price={t.price} discount= {t.discount} quantity={t.quantity} category={t.tags[0]} onChange={handleClick} disable={disable === true} setDisable={disableHandler}/>)
+            })
+            setData(newItemsArray)
+            setItems(newItemsArray)
+            setCateg(newArray)
+        }
+
       useEffect(() => {
         const down = (e: KeyboardEvent) => {
           if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
@@ -88,7 +106,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
 
     }
 
-    const enableHandler = (value2?:string)=> {
+    const enableDecrementHandler = (value2?:string)=> {
         setData(prevData => prevData.map(item => {
             if (item.key === value2) {
                 return <ItemCard key={item.props.barcode} name={item.props.name} quantity={item.props.quantity} barcode={item.props.barcode} discount= {item.props.discount} price={item.props.price} category={item.props.category} onChange={handleClick} disable={false} setDisable={disableHandler}/>
@@ -101,34 +119,23 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
             }
             return item;
     }));    
-
-
-
-
     }
 
+    const enableHandler = async (value2?:string)=> {  
+        console.log("Hello")
+
+        setTimeout(async()=> {
+
+            await getItems()
+
+        },1500)
+    }
+ 
+
     useEffect(()=> {
+
             setQuery(globalSearchValue? globalSearchValue: "");
-
-        async function getItems(){
-            const response = await fetch('/api/inventory', {cache: 'no-store'})
-            const data = await response.json();
-            const newItemsArray:any[] = [];
-            const newArray:any[] = ["all"];
-            data['product'].map((t:any,i:any) => {
-                (() => {
-                    if (newArray.length === 0 || !newArray.includes(t.tags[0])) {
-                        newArray.push(t.tags[0])
-                    }
-                })()
-                newItemsArray.push(<ItemCard key={t.barcode} name={t.name} barcode={t.barcode} price={t.price} discount= {t.discount} quantity={t.quantity} category={t.tags[0]} onChange={handleClick} disable={disable === true} setDisable={disableHandler}/>)
-            })
-            setData(newItemsArray)
-            setItems(newItemsArray)
-            setCateg(newArray)
-        }
-
-        getItems()
+            getItems()
 
         }, [])
 
@@ -191,7 +198,7 @@ const CategoryTab: React.FC<SearchProps> = ({globalSearchValue}) => {
             }
             </>
         </ScrollArea>
-        <Cart itemInfo={itemObject} setHandler={enableHandler}/>
+        <Cart itemInfo={itemObject} setHandler={enableHandler} setDecrementHandler={enableDecrementHandler}/>
        </div>
    </Tabs>
 

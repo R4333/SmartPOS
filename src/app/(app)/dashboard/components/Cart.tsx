@@ -34,6 +34,7 @@ import { useToast } from "@/components/ui/use-toast"
 interface Props{
     itemInfo?: Object;
     setHandler?: (value:string | null) => void
+    setDecrementHandler?: (value:string | null) => void
 }
 
 function generateUniqueString(length:number) {
@@ -66,7 +67,7 @@ function calDiscount(discount:any){
 
 }
 
-const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
+const Cart: React.FC<Props> = ({itemInfo, setHandler, setDecrementHandler})=> {
 
     const [unique, setUnique] = useState<string>("");
     const [items, setItems] = useState<Array<Object>>([]);
@@ -75,8 +76,13 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
     const [value, setValue] = useState("")
     const [flag, setFlag] = useState(true)
     const {toast} = useToast();
-
+    const [tax, setTax] = useState<any>(0.00);
     const currentDateTime = new Date();
+    const promoCodes = {
+        "101010": 0.25,
+        "101111": 0.15,
+        "111111": 0.65,
+    }
 
 
     useEffect(()=> {
@@ -99,6 +105,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
         items.map(item => setHandler && setHandler(item.barcode))
         setItems([]);
         setQuantity({});
+        setTax(0.00)
     }
 
     const handleDecrement = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +120,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
        delete newDiscount[barcode];
        setDiscount(newDiscount);
        setItems(items.filter((item:any) => item.barcode!== barcode)) 
-       setHandler && setHandler(barcode)
+       setDecrementHandler && setDecrementHandler(barcode)
 
        }else{
         const newObject = {...quantity};
@@ -139,6 +146,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                 description: "check logs for more info"
             })
             setFlag(true);
+            items.map(item => setHandler && setHandler(item.barcode))
         })
 
     }
@@ -152,9 +160,18 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
         const newDiscount = {...discount};
         newDiscount[itemInfo.barcode] = itemInfo.discount; 
         setDiscount(newDiscount)
+        setTax(tax + 0.05);
         }
 
     },[itemInfo])
+
+    useEffect(()=> {
+        if(promoCodes[value] !== undefined){
+           const newDiscount = {...discount};
+           newDiscount["promo"] =  promoCodes[value];
+           setDiscount(newDiscount)
+        }
+    }, [value])
 
      return(
     <div className="w-1/4">
@@ -246,7 +263,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler})=> {
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Tax</span>
-                      <span> <span className="font-bold text-muted-foreground">+</span> $0.00</span>
+                      <span> <span className="font-bold text-muted-foreground">+</span>{tax.toFixed(2)}</span>
                     </li>
                     <li className="flex items-center justify-between">
                     <span className="text-muted-foreground">Discount</span>

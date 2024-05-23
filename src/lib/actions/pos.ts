@@ -170,8 +170,8 @@ export async function createItem(
 
   const preQuant = formData.get("quantity") as string;
   const quantity = parseInt(preQuant) ?? undefined;
-  
-  const preDiscount= formData.get("discount") as string;
+
+  const preDiscount = formData.get("discount") as string;
   const discount = parseFloat(preDiscount) ?? undefined;
 
   const userId = "saada jee";
@@ -191,7 +191,7 @@ export async function createItem(
 
   if (!result.success) {
     const error = result.error.flatten().fieldErrors;
-    console.log(error)
+    console.log(error);
     if (error.name) return { error: "Invalid name - " + error.name[0] };
     if (error.price) return { error: "Invalid price - " + error.price[0] };
     if (error.description)
@@ -202,7 +202,7 @@ export async function createItem(
       return { error: "Invalid quantity - " + error.quantity[0] };
     if (error.discount)
       return { error: "Invalid discount - " + error.discount[0] };
-    
+
     return genericError;
   }
 
@@ -222,10 +222,9 @@ export async function createItem(
   };
 
   try {
-
     type NewUser = typeof itemTable.$inferInsert;
 
-    const newUser: NewUser ={
+    const newUser: NewUser = {
       barcode: itemvals.barcode,
       name: itemvals.name,
       price: itemvals.price.toString(),
@@ -236,16 +235,15 @@ export async function createItem(
       tags: itemvals.tags,
       quantity: itemvals.quantity,
       isAvailable: itemvals.isAvailable,
-    }
+    };
 
-    console.log("trying for new User")
+    console.log("trying for new User");
     await db.insert(itemTable).values(newUser);
     return { success: true, error: "Kutta" };
   } catch (e) {
-    console.log("final error")
+    console.log("final error");
     return genericError;
   }
-
 }
 
 //create sale
@@ -253,7 +251,7 @@ export async function createItem(
 export async function createSale(
   formData: FormData,
   items?: any,
-  quantity?: any,
+  quantity?: any
 ): Promise<ActionResult & { success?: boolean }> {
   const { session } = await getUserAuth();
   if (!session) return { error: "Unauthorised" };
@@ -280,30 +278,31 @@ export async function createSale(
   };
 
   try {
-
     type NewUser = typeof saleTable.$inferInsert;
-    const newUser:NewUser =  {
+    const newUser: NewUser = {
       id: saleVals.id,
       userId: saleVals.userId,
       total: String(saleVals.total),
-    }
+    };
 
-    type SaleItem= typeof saleItemTable.$inferInsert;
-    
+    type SaleItem = typeof saleItemTable.$inferInsert;
+
     await db.insert(saleTable).values(newUser);
-    items.map(async (i:any)=>{
-        await db.update(itemTable).set({quantity: sql`${itemTable.quantity} - ${quantity[i.barcode]}`,}).where(eq(itemTable.barcode, i.barcode))
-        const sale_item: SaleItem = {
-            saleId:saleVals.id,
-            itemId: i.barcode,
-        }
-        await db.insert(saleItemTable).values(sale_item);
-
+    items.map(async (i: any) => {
+      await db
+        .update(itemTable)
+        .set({ quantity: sql`${itemTable.quantity} - ${quantity[i.barcode]}` })
+        .where(eq(itemTable.barcode, i.barcode));
+      const sale_item: SaleItem = {
+        saleId: saleVals.id,
+        itemId: i.barcode,
+      };
+      await db.insert(saleItemTable).values(sale_item);
     });
 
     return { success: true, error: "" };
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return genericError;
   }
 
@@ -317,4 +316,57 @@ export async function createSale(
   // }
 }
 
-//create sale item
+// update item
+
+type ItemUpdate = {
+  price?: number;
+  discount?: number;
+  quantity?: number;
+};
+
+export async function updateItem(
+  _: any,
+  formData: FormData
+): Promise<ActionResult & { success?: boolean }> {
+  const { session } = await getUserAuth();
+  if (!session) return { error: "Unauthorised" };
+
+  const barcode = formData.get("barcode");
+
+  // get item from db
+  const [result] = await db
+    .select()
+    .from(itemTable)
+    .where(eq(itemTable.barcode, barcode.toString()));
+
+  const prePrice = formData.get("price") as string;
+
+  // if value null or undefined then set to value from the db.
+  const price = parseInt(prePrice) ?? result.price;
+
+  const preQuant = formData.get("quantity") as string;
+  const quantity = parseInt(preQuant) ?? result.quantity;
+
+  const preDiscount = formData.get("discount") as string;
+  const discount = parseFloat(preDiscount) ?? result.discount;
+
+  const itemvals: ItemUpdate = {
+    price: price, // Convert price to string
+    discount: discount,
+    quantity: quantity,
+  };
+
+  try {
+    await db
+      .update(itemTable)
+      .set({
+        price: itemvals.price?.toString(),
+        discount: itemvals.discount?.toString(),
+        quantity: itemvals.quantity,
+      })
+      .where(eq(itemTable.barcode, barcode.toString()));
+    return { success: true, error: "" };
+  } catch (e) {
+    return genericError;
+  }
+}

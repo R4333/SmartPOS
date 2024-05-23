@@ -1,10 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-} from "@radix-ui/react-icons"
+import * as React from "react";
+import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -16,8 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-
+} from "@tanstack/react-table";
 
 import {
   Dialog,
@@ -27,20 +23,19 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-  DialogFooter
-} from "@/components/ui/dialog"
+  DialogFooter,
+} from "@/components/ui/dialog";
 
-
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 
 import {
   Table,
@@ -49,273 +44,340 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-import {
-    Trash2,
-    Anvil,
-} from "lucide-react"
+import { Trash2, Anvil } from "lucide-react";
 
-import { Label } from "@/components/ui/label"
-import { ReloadIcon } from "@radix-ui/react-icons"
+import { Label } from "@/components/ui/label";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
-import { useRouter } from "next/navigation"
-import { useToast } from "@/components/ui/use-toast"
-import { toast as toast2} from "sonner" 
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { toast as toast2 } from "sonner";
 
-import { useEffect} from "react"
+import { useEffect } from "react";
 
+import { updateItem } from "@/lib/actions/pos";
 
 export default function NewInventory() {
-
-
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
-  const {toast} = useToast();
+  );
+  const { toast } = useToast();
 
   const [data, setData] = React.useState<any>([]);
 
-  React.useEffect(()=> {
-    async function getItems(){
-        const response = await fetch('/api/inventory', {cache: 'no-store'})
-        const data = await response.json();
-        setData(data['product'])
+  React.useEffect(() => {
+    async function getItems() {
+      const response = await fetch("/api/inventory", { cache: "no-store" });
+      const data = await response.json();
+      setData(data["product"]);
     }
-    getItems()
-  }, [])
+    getItems();
+  }, []);
 
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
   const [flag, setFlag] = React.useState<boolean>(true);
   const [barcodeQueue, setBarcodeQueue] = React.useState<string[]>([]);
 
+  const handleSubmit = async (
+    barcode: string,
+    name: string,
+    event?: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log(barcode, name);
+    setFlag(false);
+    toast2("Please Wait", {
+      description: "Your Item is being deleted",
+    });
+    if (event) event.preventDefault();
+    try {
+      const response = await fetch("/api/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ barcode: barcode }),
+      });
+      if (response.ok) {
+        console.log("Post request successful");
+        setBarcodeQueue((prevItems) => [...prevItems, barcode]);
+        toast2(`${name} has been deleted`, {
+          description: Date.now().toString(),
+        });
+        setFlag(true);
+      } else {
+        console.error("Post request failed");
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+        });
+      }
+    } catch (error) {
+      console.error("Error occurred while making the post request:", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    }
+  };
 
-  const handleSubmit = async (barcode:string, name:string, event?:React.ChangeEvent<HTMLInputElement>) => {
-        console.log(barcode, name)
-        setFlag(false)
-        toast2("Please Wait",{
-            description: "Your Item is being deleted"
-        })
-        if(event) event.preventDefault();
-        try {
-          const response = await fetch('/api/delete', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({barcode: barcode}),
-          });
-          if (response.ok) {
-            console.log('Post request successful');
-            setBarcodeQueue(prevItems => [...prevItems, barcode])
-            toast2(`${name} has been deleted`,{
-                description:"Friday, Febraury 10, 2023 at 5:37 PM"
-            })
-            setFlag(true);
-          } else {
-            console.error('Post request failed');
-           toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "There was a problem with your request.",
-            })
-        
+  const handleEdit = (barcode: string) => {
+    const discount = document.getElementById("discount");
+    const price = document.getElementById("price");
+    const quantity = document.getElementById("quantity");
+    console.log(discount.value, price.value, quantity.value, barcode);
 
+    // create form data
+
+    const formData = new FormData();
+    formData.append("barcode", barcode);
+    formData.append("discount", discount.value);
+    formData.append("price", price.value);
+    formData.append("quantity", quantity.value);
+
+    // user server action to update the item
+    setFlag(false);
+    toast2("Please Wait", {
+      description: "Your Item is being updated",
+    });
+
+    updateItem(1, formData).then((t) => {
+      if (t.success != undefined) {
+        toast2("Item has been updated", {
+          description: Date.now().toString(),
+        });
+        setFlag(true);
+      } else {
+        toast2("Failed to update item", {
+          description: Date.now().toString(),
+        });
+        setFlag(true);
+      }
+    });
+  };
+
+  const columns: ColumnDef<Payment>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-        } catch (error) {
-          console.error('Error occurred while making the post request:', error);
-           toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "There was a problem with your request.",
-            })
-
-
-       }
-      }
-
-      const handleEdit = (barcode:string)=> {
-          const discount = document.getElementById("discount");
-          const price = document.getElementById("price");
-          const quantity= document.getElementById("quantity");
-          console.log(discount.value, price.value, quantity.value, barcode)
-          
-      }
-
-
-
- const columns: ColumnDef<Payment>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "isAvailable",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("quantity") != 0 ? "Available" : "Not Available"}</div>
-    ),
-  },
-  {
-    accessorKey: "barcode",
-    header: "Barcode",
-    cell: ({ row }) => (
-      <div className="capitalize text-slate-400">{row.getValue("barcode")}</div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-         Name 
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      )
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-    cell: ({ row }) => <div className="pl-3">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "quantity",
-    header: "Quantity",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("quantity")}</div>
-    ),
-  },
-  {
-    accessorKey: "tags",
-    header: "Category",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("tags")}</div>
-    ),
-  },
-  {
-    accessorKey: "discount",
-    header: "Discount",
-    cell: ({ row }) => (
-      <div className="capitalize ml-3">{row.getValue("discount")}</div>
-    ),
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className=" mr-3">Price</div>,
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"))
-
-      // Format the price as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(price)
-
-      return <div className="font-medium">{formatted}</div>
+    {
+      accessorKey: "isAvailable",
+      header: "Status",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {row.getValue("quantity") != 0 ? "Available" : "Not Available"}
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("createdAt")}</div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
+    {
+      accessorKey: "barcode",
+      header: "Barcode",
+      cell: ({ row }) => (
+        <div className="capitalize text-slate-400">
+          {row.getValue("barcode")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="pl-3">{row.getValue("name")}</div>,
+    },
+    {
+      accessorKey: "quantity",
+      header: "Quantity",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("quantity")}</div>
+      ),
+    },
+    {
+      accessorKey: "tags",
+      header: "Category",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("tags")}</div>
+      ),
+    },
+    {
+      accessorKey: "discount",
+      header: "Discount",
+      cell: ({ row }) => (
+        <div className="capitalize ml-3">{row.getValue("discount")}</div>
+      ),
+    },
+    {
+      accessorKey: "price",
+      header: () => <div className=" mr-3">Price</div>,
+      cell: ({ row }) => {
+        const price = parseFloat(row.getValue("price"));
 
-     
-      return (
-        <div className="flex justify-around">
+        // Format the price as a dollar amount
+        const formatted = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(price);
+
+        return <div className="font-medium">{formatted}</div>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("createdAt")}</div>
+      ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          <div className="flex justify-around">
             <Dialog>
-              <DialogTrigger className="h-5 w-5"><Anvil className="h-5 w-5"/></DialogTrigger>
-                <DialogContent className="py-3">
-                    <DialogHeader className="">
-                        <DialogTitle className="mt-2">Edit Columns</DialogTitle>
-                    </DialogHeader>
-                            <form className="grid w-[500px] h-[300px] items-start gap-6 overflow-auto  pt-0" onSubmit={()=>handleEdit(row.getValue("barcode"))}>
-                                <fieldset className="grid gap-4 rounded-lg border p-4">
-                                  <legend className="-ml-1 px-1 text-sm font-medium">
-                                    Item
-                                  </legend>
-                                  <div className="grid gap-3">
-                                    <Label htmlFor="discount">Discount</Label>
-                                    <Input id="discount"  pattern="^\d+(\.\d{1,2})?$" type="number" placeholder="0.1" />
-                                  </div>
-                                  <div className="grid gap-3">
-                                    <Label htmlFor="price">Price</Label>
-                                    <Input id="price" type="number" placeholder="0.7" />
-                                  </div>
-                                  <div className="grid gap-3">
-                                    <Label htmlFor="quantity">Quantity</Label>
-                                    <Input id="quantity" type="number" placeholder="20" />
-                                  </div>
-                                </fieldset>
-                              </form>
-                    <DialogFooter className="sm:justify-end">
-                      <DialogClose asChild>
-                        <Button type="button" variant="outline">
-                         Close 
-                        </Button>
-                      </DialogClose>
-                      <DialogClose asChild>
-                          {flag ? <Button type="button"  onClick={()=>handleEdit(row.getValue("barcode"))} variant="outline">Submit</Button>
-                          :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
-                      </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
+              <DialogTrigger className="h-5 w-5">
+                <Anvil className="h-5 w-5" />
+              </DialogTrigger>
+              <DialogContent className="py-3">
+                <DialogHeader className="">
+                  <DialogTitle className="mt-2">Edit Columns</DialogTitle>
+                </DialogHeader>
+                <form
+                  className="grid w-[500px] h-[300px] items-start gap-6 overflow-auto  pt-0"
+                  onSubmit={() => handleEdit(row.getValue("barcode"))}
+                >
+                  <fieldset className="grid gap-4 rounded-lg border p-4">
+                    <legend className="-ml-1 px-1 text-sm font-medium">
+                      Item
+                    </legend>
+                    <div className="grid gap-3">
+                      <Label htmlFor="discount">Discount</Label>
+                      <Input
+                        id="discount"
+                        pattern="^\d+(\.\d{1,2})?$"
+                        type="number"
+                        placeholder="0.1"
+                      />
+                    </div>
+                    <div className="grid gap-3">
+                      <Label htmlFor="price">Price</Label>
+                      <Input id="price" type="number" placeholder="0.7" />
+                    </div>
+                    <div className="grid gap-3">
+                      <Label htmlFor="quantity">Quantity</Label>
+                      <Input id="quantity" type="number" placeholder="20" />
+                    </div>
+                  </fieldset>
+                </form>
+                <DialogFooter className="sm:justify-end">
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    {flag ? (
+                      <Button
+                        type="button"
+                        onClick={() => handleEdit(row.getValue("barcode"))}
+                        variant="outline"
+                      >
+                        Submit
+                      </Button>
+                    ) : (
+                      <Button disabled>
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    )}
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
             </Dialog>
 
             <Dialog>
-              <DialogTrigger className="h-5 w-5"><Trash2 className="h-5 w-5"/></DialogTrigger>
-                <DialogContent className="py-3">
-                    <DialogHeader className="">
-                        <DialogTitle className="mt-2">Are you absolutely sure?</DialogTitle>
-                          <DialogDescription className="mt-2">
-                            This action cannot be undone. This will permanently delete the item 
-                            and remove it from the database.
-                          </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className="sm:justify-end">
-                      <DialogClose asChild>
-                        <Button type="button" variant="outline">
-                         Close 
-                        </Button>
-                      </DialogClose>
-                      <DialogClose asChild>
-                          {flag ? <Button type="button" onClick={(e)=>handleSubmit(row.getValue('barcode'), row.getValue('name'), e) } variant="destructive">Yes</Button>
-                          :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
-                      </DialogClose>
-                    </DialogFooter>
-                </DialogContent>
+              <DialogTrigger className="h-5 w-5">
+                <Trash2 className="h-5 w-5" />
+              </DialogTrigger>
+              <DialogContent className="py-3">
+                <DialogHeader className="">
+                  <DialogTitle className="mt-2">
+                    Are you absolutely sure?
+                  </DialogTitle>
+                  <DialogDescription className="mt-2">
+                    This action cannot be undone. This will permanently delete
+                    the item and remove it from the database.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="sm:justify-end">
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Close
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    {flag ? (
+                      <Button
+                        type="button"
+                        onClick={(e) =>
+                          handleSubmit(
+                            row.getValue("barcode"),
+                            row.getValue("name"),
+                            e
+                          )
+                        }
+                        variant="destructive"
+                      >
+                        Yes
+                      </Button>
+                    ) : (
+                      <Button disabled>
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    )}
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
             </Dialog>
-            </div>
-      )
+          </div>
+        );
+      },
     },
-  },
-]
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -333,25 +395,25 @@ export default function NewInventory() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
-  const handleSelected = (e:React.ChangeEvent<HTMLInputElement>)=> {
-           e.preventDefault();
-           if(table.getRowModel().rows.length != 0){
-            const rows = Object.keys(rowSelection)
-            rows.map((r:any) => handleSubmit(table.getPaginationRowModel().rowsById[r].original.barcode, table.getPaginationRowModel().rowsById[r].original.name))
-            setRowSelection({})
-            }
+  const handleSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (table.getRowModel().rows.length != 0) {
+      const rows = Object.keys(rowSelection);
+      rows.map((r: any) =>
+        handleSubmit(
+          table.getPaginationRowModel().rowsById[r].original.barcode,
+          table.getPaginationRowModel().rowsById[r].original.name
+        )
+      );
+      setRowSelection({});
+    }
+  };
 
-
-  }  
-
-
-  useEffect(()=> {
-
-     setData(data.filter((item:any) => !(barcodeQueue.includes(item.barcode))))
-
-  },[barcodeQueue])
+  useEffect(() => {
+    setData(data.filter((item: any) => !barcodeQueue.includes(item.barcode)));
+  }, [barcodeQueue]);
 
   return (
     <div className="w-full h-[350px]">
@@ -386,12 +448,17 @@ export default function NewInventory() {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <form onSubmit={handleSelected}><Button variant='ghost' type="submit" size="icon" className="ml-1"> <Trash2 className="h-4 w-4 text-red-500"/></Button></form>
+      <form onSubmit={handleSelected}>
+        <Button variant="ghost" type="submit" size="icon" className="ml-1">
+          {" "}
+          <Trash2 className="h-4 w-4 text-red-500" />
+        </Button>
+      </form>
       <div className="h-[680px]">
         <Table className="">
           <TableHeader>
@@ -407,7 +474,7 @@ export default function NewInventory() {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -415,7 +482,10 @@ export default function NewInventory() {
           <TableBody className="">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
@@ -462,8 +532,7 @@ export default function NewInventory() {
             Next
           </Button>
         </div>
+      </div>
     </div>
-    </div>
-  )
+  );
 }
-

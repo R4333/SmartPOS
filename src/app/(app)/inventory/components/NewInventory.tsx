@@ -128,6 +128,13 @@ export default function NewInventory() {
   };
 
   const handleEdit = (barcode: string) => {
+
+    async function getItems() {
+      const response = await fetch("/api/inventory", { cache: "no-store" });
+      const data = await response.json();
+      setData(data["product"]);
+    }
+
     const discount = document.getElementById("discount");
     const price = document.getElementById("price");
     const quantity = document.getElementById("quantity");
@@ -153,6 +160,7 @@ export default function NewInventory() {
           description: Date.now().toString(),
         });
         setFlag(true);
+        getItems();
       } else {
         toast2("Failed to update item", {
           description: Date.now().toString(),
@@ -160,6 +168,8 @@ export default function NewInventory() {
         setFlag(true);
       }
     });
+
+
   };
 
   const columns: ColumnDef<Payment>[] = [

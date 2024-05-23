@@ -21,11 +21,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useState } from "react";
+
 export default function SignUpPage() {
   const [state, formAction] = useFormState(signUpAction, {
     error: "",
   });
+  const [role, setRole] = useState("");
 
+  const handleSelection = (e:string) => {
+      setRole(e)
+  }
   return (
     <main className="max-w-lg mx-auto my-4 bg-background p-10 border rounded-md">
       <h1 className="text-2xl font-bold text-center">New User</h1>
@@ -49,7 +55,7 @@ export default function SignUpPage() {
         <Label htmlFor="role" className="text-muted-foreground">
           Role
         </Label>
-        <Select>
+        <Select onValueChange={handleSelection}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a role" />
           </SelectTrigger>

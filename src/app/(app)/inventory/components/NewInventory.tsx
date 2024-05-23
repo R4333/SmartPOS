@@ -2,20 +2,8 @@
 
 import * as React from "react"
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet"
-
-import { Separator } from "@/components/ui/separator"
-import {
   CaretSortIcon,
   ChevronDownIcon,
-  DotsHorizontalIcon,
 } from "@radix-ui/react-icons"
 import {
   ColumnDef,
@@ -49,12 +37,11 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
 import { Input } from "@/components/ui/input"
+
 import {
   Table,
   TableBody,
@@ -63,23 +50,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
 import {
     Trash2,
     Anvil,
 } from "lucide-react"
+
 import { Label } from "@/components/ui/label"
-
-
 import { ReloadIcon } from "@radix-ui/react-icons"
 
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { toast as toast2} from "sonner" 
 
-import { useEffect } from "react"
+import { useEffect} from "react"
 
 
 export default function NewInventory() {
+
 
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -88,10 +76,6 @@ export default function NewInventory() {
   const {toast} = useToast();
 
   const [data, setData] = React.useState<any>([]);
-  const [quantity, setQuantity] = React.useState<string>("");
-  const [discount, setDiscount] = React.useState<string>("");
-  const [price, setPrice] = React.useState<string>("");
-  const [deleteList, setDeleteList] = React.useState<any>([]);
 
   React.useEffect(()=> {
     async function getItems(){
@@ -106,11 +90,6 @@ export default function NewInventory() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [flag, setFlag] = React.useState<boolean>(true);
   const [barcodeQueue, setBarcodeQueue] = React.useState<string[]>([]);
-
-
-  const handleInput = (e:React.ChangeEvent<HTMLInputElement>)=> {
-          setDiscount(e.target.value);
-      }
 
 
   const handleSubmit = async (barcode:string, name:string, event?:React.ChangeEvent<HTMLInputElement>) => {
@@ -157,8 +136,12 @@ export default function NewInventory() {
        }
       }
 
-      const formHandler = ()=> {
-          console.log("hi");
+      const handleEdit = (barcode:string)=> {
+          const discount = document.getElementById("discount");
+          const price = document.getElementById("price");
+          const quantity= document.getElementById("quantity");
+          console.log(discount.value, price.value, quantity.value, barcode)
+          
       }
 
 
@@ -263,11 +246,6 @@ export default function NewInventory() {
     enableHiding: false,
     cell: ({ row }) => {
 
-      const initValues = () => {
-          setQuantity(row.getValue('quantity'));
-          setDiscount(row.getValue('discount'));
-      }
-
      
       return (
         <div className="flex justify-around">
@@ -277,22 +255,22 @@ export default function NewInventory() {
                     <DialogHeader className="">
                         <DialogTitle className="mt-2">Edit Columns</DialogTitle>
                     </DialogHeader>
-                            <form className="grid w-[500px] h-[300px] items-start gap-6 overflow-auto  pt-0">
+                            <form className="grid w-[500px] h-[300px] items-start gap-6 overflow-auto  pt-0" onSubmit={()=>handleEdit(row.getValue("barcode"))}>
                                 <fieldset className="grid gap-4 rounded-lg border p-4">
                                   <legend className="-ml-1 px-1 text-sm font-medium">
                                     Item
                                   </legend>
                                   <div className="grid gap-3">
-                                    <Label htmlFor="top-k">Discount</Label>
-                                    <Input id="discount"  pattern="^\d+(\.\d{1,2})?$" type="number" onChange={(e)=>setDiscount(e.target.value)} placeholder="0.1" required/>
+                                    <Label htmlFor="discount">Discount</Label>
+                                    <Input id="discount"  pattern="^\d+(\.\d{1,2})?$" type="number" placeholder="0.1" />
                                   </div>
                                   <div className="grid gap-3">
-                                    <Label htmlFor="top-p">Price</Label>
-                                    <Input id="price" type="number" onChange={(e)=>setPrice(e.target.value)} placeholder="0.7" />
+                                    <Label htmlFor="price">Price</Label>
+                                    <Input id="price" type="number" placeholder="0.7" />
                                   </div>
                                   <div className="grid gap-3">
-                                    <Label htmlFor="top-k">Quantity</Label>
-                                    <Input id="quantity" type="number" onChange={(e)=>setQuantity(e.target.value)} placeholder="20" />
+                                    <Label htmlFor="quantity">Quantity</Label>
+                                    <Input id="quantity" type="number" placeholder="20" />
                                   </div>
                                 </fieldset>
                               </form>
@@ -303,7 +281,7 @@ export default function NewInventory() {
                         </Button>
                       </DialogClose>
                       <DialogClose asChild>
-                          {flag ? <Button type="button" onClick={(e)=>handleSubmit(row.getValue('barcode'), row.getValue('name'), e) } variant="outline">Submit</Button>
+                          {flag ? <Button type="button"  onClick={()=>handleEdit(row.getValue("barcode"))} variant="outline">Submit</Button>
                           :<Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Please wait</Button>}
                       </DialogClose>
                     </DialogFooter>

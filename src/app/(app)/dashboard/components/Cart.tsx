@@ -147,6 +147,7 @@ const Cart: React.FC<Props> = ({itemInfo, setHandler, setDecrementHandler})=> {
             })
             setFlag(true);
             items.map(item => setHandler && setHandler(item.barcode))
+            setTax(0.00)
         })
 
     }
